@@ -1,0 +1,96 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Post {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    title     String   @db.VarChar(255)
+    content   String?
+    published Boolean  @default(false)
+    author    User     @relation(fields: [authorId], references: [id])
+    authorId  Int
+}
+
+model Profile {
+    id     Int     @id @default(autoincrement())
+    bio    String?
+    user   User    @relation(fields: [userId], references: [id])
+    userId Int     @unique
+}
+
+model User {
+    id      Int      @id @default(autoincrement())
+    email   String   @unique
+    name    String?
+    posts   Post[]
+    profile Profile?
+}
+
+model Competition {
+    id     String  @id @default(cuid())
+    apiId  Int     @unique
+    name   String
+    code   String
+    type   String
+    emblem String?
+
+    teams Team[]
+
+    fixtures Fixture[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("competitions")
+}
+
+model Team {
+    id        String  @id @default(cuid())
+    apiId     Int     @unique
+    name      String
+    shortName String?
+    tla       String?
+    crest     String?
+
+    competitions Competition[]
+
+    homeFixtures Fixture[] @relation("HomeFixtures")
+    awayFixtures Fixture[] @relation("AwayFixtures")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("teams")
+}
+
+model Fixture {
+    id       String   @id @default(cuid())
+    apiId    Int      @unique
+    utcDate  DateTime
+    status   String
+    matchday Int
+
+    Competition   Competition? @relation(fields: [competitionId], references: [id])
+    competitionId String?
+
+    homeTeam   Team   @relation("HomeFixtures", fields: [homeTeamId], references: [id])
+    homeTeamId String
+
+    awayTeam   Team   @relation("AwayFixtures", fields: [awayTeamId], references: [id])
+    awayTeamId String
+
+    score Json
+
+    apiLastUpdated DateTime
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
+
+    @@map("fixtures")
+}
