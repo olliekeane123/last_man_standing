@@ -5,7 +5,7 @@ dotenv.config({ path: path.resolve(__dirname, "../../.env.local") })
 
 import { syncFixtures } from "@/lib/cron/syncFixtures"
 import { syncTeams } from "@/lib/cron/syncTeams"
-import { seedCompetitions } from "@/seeds/seedCompetitions"
+import { seedCompetitions } from "@/seeds/lib/seedCompetitions"
 
 async function seed() {
     console.log("Beginning seeding")

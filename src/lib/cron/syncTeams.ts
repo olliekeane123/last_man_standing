@@ -15,6 +15,11 @@ export async function syncTeams(): Promise<FootballTeam[]> {
                         shortName: team.shortName,
                         tla: team.tla,
                         crest: team.crest,
+                        competitions: {
+                            connect: {
+                                apiId: team.compId,
+                            },
+                        },
                     },
                     create: {
                         apiId: team.id,
@@ -26,7 +31,7 @@ export async function syncTeams(): Promise<FootballTeam[]> {
                 })
             )
         )
-    return allTeams
+        return allTeams
     } catch (error) {
         console.error("Failed to store teams: " + error)
         throw error

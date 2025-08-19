@@ -5,11 +5,13 @@ import {
     FootballTeamsResponseSchema,
 } from "@/lib/schemas/footballApiSchemas"
 
-export default async function fetchTeams(): Promise<FootballTeam[]> {
+export default async function fetchTeams(): Promise<
+    (FootballTeam & { compId: number })[]
+> {
     try {
-        const teamPromises = COMPETITIONS.map(async ({ code }) => {
+        const teamPromises = COMPETITIONS.map(async ({ id }) => {
             const response = await fetch(
-                `https://api.football-data.org/v4/competitions/${code}/teams`,
+                `https://api.football-data.org/v4/competitions/${id}/teams`,
                 {
                     headers: {
                         "X-Auth-Token": env.FOOTBALL_DATA_ORG_API_KEY,
@@ -31,7 +33,14 @@ export default async function fetchTeams(): Promise<FootballTeam[]> {
                 throw new Error("Invalid API response structure")
             }
 
-            return parsed.data.teams
+            const teamsWithComps = parsed.data.teams.map((team) => {
+                return {
+                    ...team,
+                    compId: id,
+                }
+            })
+
+            return teamsWithComps
         })
 
         const allTeams = await Promise.all(teamPromises)
