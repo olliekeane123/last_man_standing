@@ -3,9 +3,9 @@ import path from "path"
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env.local") })
 
-import { syncFixtures } from "@/lib/cron/syncFixtures"
-import { syncTeams } from "@/lib/cron/syncTeams"
 import { seedCompetitions } from "@/seeds/lib/seedCompetitions"
+import { seedAllTeams } from "@/lib/services/teamService"
+import { seedAllFixtures } from "@/lib/services/fixtureService"
 
 async function seed() {
     console.log("Beginning seeding")
@@ -13,10 +13,10 @@ async function seed() {
     await seedCompetitions()
     console.log("Competitions seeded")
 
-    await syncTeams()
+    await seedAllTeams()
     console.log("Teams seeded")
 
-    await syncFixtures()
+    await seedAllFixtures()
     console.log("Fixtures seeded")
 
     console.log("Seed completed")
@@ -33,4 +33,8 @@ async function main() {
     }
 }
 
-main()
+if (require.main === module) {
+    main()
+}
+
+export default main

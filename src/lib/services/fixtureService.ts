@@ -1,17 +1,30 @@
-import fetchFixtures from "@/lib/api/fetchFixtures"
 import prisma from "@/lib/prisma"
+import { fetchFixturesForCompetition } from "@/lib/external-api/footballData/fixtures"
 import { FootballFixture } from "@/lib/schemas/footballApiSchemas"
 
-export async function syncFixtures(): Promise<FootballFixture[]> {
+export async function seedAllFixtures() {
+    const competitions = await prisma.competition.findMany()
+
+    for (const competition of competitions) {
+        try {
+            console.log(`Seeding fixtures for competition: ${competition.name} (${competition.apiId})`)
+            await syncAllFixturesForCompetition(competition.apiId)
+        } catch (error) {
+            console.error(`Failed to seed fixtures for competition ${competition.name} (${competition.apiId}):`, error)
+        }
+    }
+}
+
+export async function syncAllFixturesForCompetition(competitionCode: number): Promise<FootballFixture[]> {
     try {
-        const allFixtures = await fetchFixtures()
+        const externalFixtures = await fetchFixturesForCompetition(competitionCode)
 
         const batchSize = 50
-        for (let i = 0; i < allFixtures.length; i += batchSize) {
-            const batch = allFixtures.slice(i, i + batchSize)
+        for (let i = 0; i < externalFixtures.length; i += batchSize) {
+            const batch = externalFixtures.slice(i, i + batchSize)
             console.log(
                 `Processing batch ${i / batchSize + 1} of ${Math.ceil(
-                    allFixtures.length / batchSize
+                    externalFixtures.length / batchSize
                 )}`
             )
             await prisma.$transaction(
@@ -47,7 +60,7 @@ export async function syncFixtures(): Promise<FootballFixture[]> {
             )
         }
 
-        return allFixtures
+        return externalFixtures
     } catch (error) {
         console.error("Failed to store fixtures:", error)
         throw error

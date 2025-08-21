@@ -4,8 +4,9 @@ import {
     FootballTeam,
     FootballTeamsResponseSchema,
 } from "@/lib/schemas/footballApiSchemas"
+import { footabllDataRequest } from "@/lib/external-api/footballData/client"
 
-export default async function fetchTeams(): Promise<
+export default async function fetchAllTeams(): Promise<
     (FootballTeam & { compId: number })[]
 > {
     try {
@@ -51,4 +52,20 @@ export default async function fetchTeams(): Promise<
         console.error("Failed to fetch teams:", error)
         throw error
     }
+}
+
+
+export async function fetchTeamsForCompetition(competitionCode: number): Promise<(FootballTeam & { compId: number })[]> {
+    const data = await footabllDataRequest(
+        `competitions/${competitionCode}/teams`
+    )
+    const parsed = FootballTeamsResponseSchema.safeParse(data)
+    if (!parsed.success) {
+        console.error("Validation errors:", parsed.error)
+        throw new Error("Invalid API response structure")
+    }
+    return parsed.data.teams.map((team) => ({
+        ...team,
+        compId: competitionCode,
+    }))
 }

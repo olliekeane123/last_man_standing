@@ -4,8 +4,9 @@ import {
 } from "@/lib/schemas/footballApiSchemas"
 import { env } from "@/lib/env"
 import { COMPETITIONS } from "@/lib/competitions"
+import { footabllDataRequest } from "@/lib/external-api/footballData/client"
 
-export default async function fetchFixtures(): Promise<FootballFixture[]> {
+export default async function fetchAllFixtures(): Promise<FootballFixture[]> {
     try {
         const fixturePromises = COMPETITIONS.map(async ({ code }) => {
             const response = await fetch(
@@ -42,4 +43,17 @@ export default async function fetchFixtures(): Promise<FootballFixture[]> {
         console.error("Failed to fetch fixtures:", error)
         throw error
     }
+}
+
+
+export async function fetchFixturesForCompetition(competitionCode: number): Promise<FootballFixture[]> {
+    const data = await footabllDataRequest(
+        `competitions/${competitionCode}/matches`
+    )
+    const parsed = FootballFixturesResponseSchema.safeParse(data)
+    if (!parsed.success) {
+        console.error("Validation errors:", parsed.error)
+        throw new Error("Invalid API response structure")
+    }
+    return parsed.data.matches
 }
