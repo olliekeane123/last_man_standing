@@ -1,10 +1,10 @@
-import Header from "./components/Header";
+import NavBar from "./components/NavBar";
 import { MatchweekFixtures } from "./components/MatchweekFixtures";
 
 export default function Home() {
   return (
     <div>
-        <Header/>
+        <NavBar/>
         <div className="flex items-center justify-center">
             <MatchweekFixtures />
         </div>

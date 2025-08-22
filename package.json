@@ -10,6 +10,7 @@
         "seed-db": "npx ts-node -r tsconfig-paths/register src/seeds/seed.ts"
     },
     "dependencies": {
+        "@clerk/nextjs": "^6.31.4",
         "@prisma/client": "^6.14.0",
         "axios": "^1.11.0",
         "next": "15.4.6",
