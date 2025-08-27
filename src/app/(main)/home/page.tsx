@@ -2,7 +2,7 @@ import { MatchweekFixtures } from "../components/MatchweekFixtures"
 import { getUserByClerkId } from "@/lib/actions/user"
 import { auth } from "@clerk/nextjs/server"
 
-export default async function Dashboard() {
+export default async function Home() {
     const { userId } = await auth()
     if (!userId) {
         throw new Error("Can't access clerk Id, user must be signed in")
