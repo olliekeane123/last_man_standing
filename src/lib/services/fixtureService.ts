@@ -1,23 +1,32 @@
 import prisma from "@/lib/prisma"
 import { fetchFixturesForCompetition } from "@/lib/external-api/footballData/fixtures"
-import { FootballFixture } from "@/lib/schemas/footballApiSchemas"
+import { FootballFixture } from "@/lib/types/schemas/footballApiSchemas"
 
 export async function seedAllFixtures() {
     const competitions = await prisma.competition.findMany()
 
     for (const competition of competitions) {
         try {
-            console.log(`Seeding fixtures for competition: ${competition.name} (${competition.apiId})`)
+            console.log(
+                `Seeding fixtures for competition: ${competition.name} (${competition.apiId})`
+            )
             await syncAllFixturesForCompetition(competition.apiId)
         } catch (error) {
-            console.error(`Failed to seed fixtures for competition ${competition.name} (${competition.apiId}):`, error)
+            console.error(
+                `Failed to seed fixtures for competition ${competition.name} (${competition.apiId}):`,
+                error
+            )
         }
     }
 }
 
-export async function syncAllFixturesForCompetition(competitionCode: number): Promise<FootballFixture[]> {
+export async function syncAllFixturesForCompetition(
+    competitionCode: number
+): Promise<FootballFixture[]> {
     try {
-        const externalFixtures = await fetchFixturesForCompetition(competitionCode)
+        const externalFixtures = await fetchFixturesForCompetition(
+            competitionCode
+        )
 
         const batchSize = 50
         for (let i = 0; i < externalFixtures.length; i += batchSize) {

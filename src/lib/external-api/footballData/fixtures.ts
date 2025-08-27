@@ -1,7 +1,7 @@
 import {
     FootballFixture,
     FootballFixturesResponseSchema,
-} from "@/lib/schemas/footballApiSchemas"
+} from "@/lib/types/schemas/footballApiSchemas"
 import { env } from "@/lib/env"
 import { COMPETITIONS } from "@/lib/competitions"
 import { footabllDataRequest } from "@/lib/external-api/footballData/client"
@@ -45,8 +45,9 @@ export default async function fetchAllFixtures(): Promise<FootballFixture[]> {
     }
 }
 
-
-export async function fetchFixturesForCompetition(competitionCode: number): Promise<FootballFixture[]> {
+export async function fetchFixturesForCompetition(
+    competitionCode: number
+): Promise<FootballFixture[]> {
     const data = await footabllDataRequest(
         `competitions/${competitionCode}/matches`
     )

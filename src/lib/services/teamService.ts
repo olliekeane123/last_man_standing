@@ -1,22 +1,28 @@
-import  { fetchTeamsForCompetition } from "../external-api/footballData/teams"
+import { fetchTeamsForCompetition } from "../external-api/footballData/teams"
 import prisma from "../prisma"
-import { FootballTeam } from "../schemas/footballApiSchemas"
+import { FootballTeam } from "../types/schemas/footballApiSchemas"
 
-export async function seedAllTeams(){
+export async function seedAllTeams() {
     const competitions = await prisma.competition.findMany()
 
     for (const competition of competitions) {
         try {
-            console.log(`Seeding teams for competition: ${competition.name} (${competition.apiId})`)
+            console.log(
+                `Seeding teams for competition: ${competition.name} (${competition.apiId})`
+            )
             await syncAllTeamsForCompetition(competition.apiId)
         } catch (error) {
-            console.error(`Failed to seed teams for competition ${competition.name} (${competition.apiId}):`, error)
+            console.error(
+                `Failed to seed teams for competition ${competition.name} (${competition.apiId}):`,
+                error
+            )
         }
     }
 }
 
-
-export async function syncAllTeamsForCompetition(competitionCode: number): Promise<FootballTeam[]> {
+export async function syncAllTeamsForCompetition(
+    competitionCode: number
+): Promise<FootballTeam[]> {
     try {
         const teams = await fetchTeamsForCompetition(competitionCode)
 

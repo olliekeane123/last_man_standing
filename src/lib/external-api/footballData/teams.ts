@@ -3,7 +3,7 @@ import { COMPETITIONS } from "@/lib/competitions"
 import {
     FootballTeam,
     FootballTeamsResponseSchema,
-} from "@/lib/schemas/footballApiSchemas"
+} from "@/lib/types/schemas/footballApiSchemas"
 import { footabllDataRequest } from "@/lib/external-api/footballData/client"
 
 export default async function fetchAllTeams(): Promise<
@@ -54,8 +54,9 @@ export default async function fetchAllTeams(): Promise<
     }
 }
 
-
-export async function fetchTeamsForCompetition(competitionCode: number): Promise<(FootballTeam & { compId: number })[]> {
+export async function fetchTeamsForCompetition(
+    competitionCode: number
+): Promise<(FootballTeam & { compId: number })[]> {
     const data = await footabllDataRequest(
         `competitions/${competitionCode}/teams`
     )

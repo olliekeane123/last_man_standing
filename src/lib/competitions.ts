@@ -1,4 +1,4 @@
-import { Competition } from "@/lib/schemas/footballApiSchemas";
+import { Competition } from "@/lib/types/schemas/footballApiSchemas"
 
 export const COMPETITIONS: Competition[] = [
     {

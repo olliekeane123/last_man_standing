@@ -16,7 +16,76 @@ model User {
     createdAt       DateTime @default(now())
     updatedAt       DateTime @updatedAt
 
+    gamesAdministered Game[]
+    gamesJoined       UserGame[]
+
     @@map("users")
+}
+
+model Game {
+    id         String @id @default(cuid())
+    title      String
+    gameStatus GameStatus @default(open)
+
+    admin   User   @relation(fields: [adminId], references: [id])
+    adminId String
+
+    players UserGame[]
+
+    @@map("games")
+}
+
+enum GameStatus {
+    open
+    inProgress
+    completed
+}
+
+model UserGame {
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+
+    game   Game   @relation(fields: [gameId], references: [id])
+    gameId String
+
+    picks Pick[]
+
+    isKnockedOut Boolean  @default(false)
+    joinedAt     DateTime @default(now())
+
+    @@id([userId, gameId])
+
+    @@map("userGames")
+}
+
+model Pick {
+    id String @id @default(cuid())
+
+    userGame UserGame @relation(fields: [userId, gameId], references: [userId, gameId])
+    userId   String
+    gameId   String
+
+    gameweek   Gameweek @relation(fields: [gameweekId], references: [id])
+    gameweekId String
+
+    teamPicked   Team   @relation(fields: [teamPickedId], references: [id])
+    teamPickedId String
+
+    isCorrect Boolean?
+
+    createdAt DateTime @default(now())
+
+    @@map("picks")
+}
+
+model Gameweek {
+    id             String    @id @default(cuid())
+    gameweekNumber Int       @unique
+    deadline       DateTime
+    fixtures       Fixture[]
+    picks          Pick[]
+
+    @@map("gameweeks")
 }
 
 model Competition {
@@ -53,6 +122,8 @@ model Team {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    picks Pick[]
+
     @@map("teams")
 }
 
@@ -65,6 +136,9 @@ model Fixture {
 
     Competition   Competition? @relation(fields: [competitionId], references: [id])
     competitionId String?
+
+    gameweek   Gameweek? @relation(fields: [gameweekId], references: [id])
+    gameweekId String?
 
     homeTeam   Team   @relation("HomeFixtures", fields: [homeTeamId], references: [id])
     homeTeamId String
