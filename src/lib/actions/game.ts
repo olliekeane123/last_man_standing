@@ -8,17 +8,21 @@ import { createGameService } from "../services/gameService"
 export async function createGame({ title }: CreateGameFormData) {
     try {
         const { userId } = await auth()
-        if (userId) {
-            const { user } = await getUserByClerkId(userId)
-            if (user) {
-                return await createGameService(title, user.id)
-            } else {
-                throw new Error("Unable to retrieve user from database")
-            }
-        } else {
+
+        if (!userId) {
             throw new Error("Unable to retrieve user from clerk")
         }
+        const { user } = await getUserByClerkId(userId)
+        if (!user) {
+            throw new Error("Unable to retrieve user from database")
+        }
+        const game = await createGameService(title, user.id)
+        return {
+            success: true,
+            game,
+        }
     } catch (error) {
+        console.error("Failed to create game:", error)
         return {
             success: false,
             error:
