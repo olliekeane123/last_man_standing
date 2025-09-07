@@ -1,5 +1,5 @@
 import { MatchweekFixtures } from "../components/MatchweekFixtures"
-import { getUserByClerkId } from "@/lib/actions/user"
+import { getUserByClerkId } from "@/lib/actions/user.actions"
 import { auth } from "@clerk/nextjs/server"
 
 export default async function Home() {
@@ -19,7 +19,7 @@ export default async function Home() {
     return (
         <div>
             <div className="flex flex-col items-center justify-center space-y-6">
-            <div>Welcome, {user.email}</div>
+                <div>Welcome, {user.email}</div>
                 <MatchweekFixtures />
             </div>
         </div>

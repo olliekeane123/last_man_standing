@@ -2,7 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server"
 import { CreateGameFormData } from "../types/game"
-import { getUserByClerkId } from "./user"
+import { getUserByClerkId } from "./user.actions"
 import { createGameService } from "../services/gameService"
 
 export async function createGame({ title }: CreateGameFormData) {

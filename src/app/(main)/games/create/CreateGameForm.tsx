@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CreateGameFormSchema } from "@/lib/types/schemas/gameSchema"
 import { CreateGameFormData } from "@/lib/types/game"
-import { createGame } from "@/lib/actions/game"
+import { createGame } from "@/lib/actions/game.actions"
 
 export default function CreateGameForm() {
     const defaultValues: CreateGameFormData = {
