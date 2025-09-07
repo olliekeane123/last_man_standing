@@ -10,3 +10,18 @@ export async function createGameService(title: string, adminId: string) {
 
     return newGame
 }
+
+export async function getAllGamesByUserService(userId: string) {
+    const userGames = await prisma.userGame.findMany({
+        where: {
+            userId,
+        },
+        include: {
+            game: true,
+        },
+    })
+
+    const games = userGames.map(userGame => userGame.game)
+
+    return games
+}
