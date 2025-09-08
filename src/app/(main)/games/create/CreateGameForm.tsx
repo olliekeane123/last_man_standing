@@ -14,7 +14,6 @@ export default function CreateGameForm() {
     const {
         register,
         handleSubmit,
-        getValues,
         formState: { errors, isSubmitting },
     } = useForm<CreateGameFormData>({
         resolver: zodResolver(CreateGameFormSchema),
@@ -26,19 +25,21 @@ export default function CreateGameForm() {
             <div>
                 <h2 className="font-bold text-2xl">Create a new game</h2>
             </div>
-            <form onSubmit={handleSubmit(createGame)} className="flex flex-col space-y-3 max-w-2xl">
-                <label htmlFor="">Game title</label>
-                <input
-                    type="text"
-                    id="title"
-                    {...register("title")}
-                />
+            <form onSubmit={handleSubmit(createGame)} className="max-w-sm mx-auto">
+                <div className="mb-5">
+                    <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900 ">Game title</label>
+                    <input
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your New Game"
+                        type="text"
+                        id="title"
+                        {...register("title")}
+                    />
+                </div>
                 {errors.title && <div className="text-red-500">{errors.title.message}</div>}
-                <button className="border-1 border-blue-500 cursor-pointer" disabled={isSubmitting} type="submit">
+                <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" disabled={isSubmitting} type="submit">
                     {isSubmitting ? "Loading..." : "Create game"}
                 </button>
 
-                <p>{JSON.stringify(getValues())}</p>
             </form>
         </div>
     )
