@@ -25,7 +25,7 @@ export default function CreateGameForm() {
             <div>
                 <h2 className="font-bold text-2xl">Create a new game</h2>
             </div>
-            <form onSubmit={handleSubmit(createGame)} className="max-w-sm mx-auto">
+            <form onSubmit={handleSubmit(createGame)} className="max-w-sm">
                 <div className="mb-5">
                     <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900 ">Game title</label>
                     <input
