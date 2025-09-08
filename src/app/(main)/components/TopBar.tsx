@@ -7,10 +7,9 @@ import {
 } from "@clerk/nextjs"
 import Image from "next/image"
 
-export default function NavBar() {
+export default function TopBar() {
     return (
-        <header>
-            <nav className="flex justify-between items-center border-b mb-4 px-6 py-3">
+        <header className="flex justify-between items-center border-b mb-4 px-6 py-3">
                 <div className="flex items-center">
                     <Image
                         src="/vercel.svg"
@@ -33,7 +32,6 @@ export default function NavBar() {
                         <UserButton />
                     </SignedIn>
                 </div>
-            </nav>
         </header>
     )
 }
