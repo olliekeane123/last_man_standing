@@ -1,14 +1,25 @@
 import prisma from "@/lib/prisma"
 
 export async function createGameService(title: string, adminId: string) {
-    const newGame = await prisma.game.create({
-        data: {
-            title,
-            adminId,
-        },
+    const newGameAndUserGame = await prisma.$transaction(async (tx) => {
+        const newGame = await tx.game.create({
+            data: {
+                title,
+                adminId,
+            },
+        })
+
+        const newUserGame = await tx.userGame.create({
+            data: {
+                userId: adminId,
+                gameId: newGame.id
+            }
+        })
+
+        return { newGame, newUserGame };
     })
 
-    return newGame
+    return newGameAndUserGame.newGame
 }
 
 export async function getAllGamesByUserService(userId: string) {
@@ -21,7 +32,7 @@ export async function getAllGamesByUserService(userId: string) {
         },
     })
 
-    const games = userGames.map(userGame => userGame.game)
+    const games = userGames.map((userGame) => userGame.game)
 
     return games
 }
