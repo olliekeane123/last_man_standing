@@ -1,14 +1,9 @@
 import { getAllGamesByUser } from "@/lib/actions/game.actions"
 
-const games = await getAllGamesByUser()
-
 export default async function Game() {
-    async function wait(){
-        new Promise(resolve => setTimeout(resolve, 3000));
-    }
-    
-    await wait()
-    
+
+    const games = await getAllGamesByUser()
+
     if (!games.success) {
         return <div>Error.</div>
     }
