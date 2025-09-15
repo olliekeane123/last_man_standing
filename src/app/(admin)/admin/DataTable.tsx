@@ -19,6 +19,8 @@ import { DataTablePagination } from "./DataTablePagination"
 import { useTableParams } from "./hooks/useTableParams"
 import { FixtureTableData } from "@/lib/types/fixture"
 import { createColumns } from "./createColumns"
+import { useState } from "react"
+import EditFixtureDialog from "./EditFIxtureDialog"
 
 type PaginationInfo = {
     currentPage: number
@@ -29,15 +31,20 @@ type PaginationInfo = {
     hasPreviousPage: boolean
 }
 
-interface DataTableProps {
+type DataTableProps = {
     data: FixtureTableData[]
     pagination: PaginationInfo
 }
 
 export function DataTable({ data, pagination }: DataTableProps) {
+    const [dialogOpen, setDialogOpen] = useState(false)
+    const [selectedRow, setSelectedRow] = useState<FixtureTableData | null>(
+        null
+    )
+
     const { params, updateParams } = useTableParams()
 
-    const columns = createColumns(params, updateParams)
+    const columns = createColumns(params, updateParams, handleEdit)
 
     const table = useReactTable({
         data,
@@ -48,8 +55,18 @@ export function DataTable({ data, pagination }: DataTableProps) {
         pageCount: pagination.totalPages,
     })
 
+    function handleEdit(row: FixtureTableData) {
+        setSelectedRow(row)
+        setDialogOpen(true)
+    }
+
     return (
         <div>
+            <EditFixtureDialog
+                dialogOpen={dialogOpen}
+                setDialogOpen={setDialogOpen}
+                selectedRow={selectedRow}
+            />
             <div className="overflow-hidden rounded-md border">
                 <Table>
                     <TableHeader>
@@ -61,7 +78,8 @@ export function DataTable({ data, pagination }: DataTableProps) {
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
-                                                      header.column.columnDef.header,
+                                                      header.column.columnDef
+                                                          .header,
                                                       header.getContext()
                                                   )}
                                         </TableHead>
@@ -75,7 +93,9 @@ export function DataTable({ data, pagination }: DataTableProps) {
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
+                                    data-state={
+                                        row.getIsSelected() && "selected"
+                                    }
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>

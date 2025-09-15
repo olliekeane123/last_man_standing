@@ -17,7 +17,8 @@ import { TableParams } from "@/lib/types/tableParams"
 
 export function createColumns(
     currentParams: TableParams,
-    updateParams: (updates: Partial<TableParams>) => void
+    updateParams: (updates: Partial<TableParams>) => void,
+    onEdit: (row: FixtureTableData) => void
 ): ColumnDef<FixtureTableData>[] {
     return [
         {
@@ -88,15 +89,18 @@ export function createColumns(
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem
                                 onClick={() =>
+                                    onEdit(row.original)
+                                }
+                            >
+                                Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                onClick={() =>
                                     navigator.clipboard.writeText(fixture.id)
                                 }
                             >
-                                Copy payment ID
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>View customer</DropdownMenuItem>
-                            <DropdownMenuItem>
-                                View payment details
+                                Copy Fixture ID
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
