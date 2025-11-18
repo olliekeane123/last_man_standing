@@ -1,7 +1,8 @@
 import prisma from "@/lib/prisma"
-import { FixtureTableData } from "@/lib/types/fixture"
+import { FixtureStatus, FixtureTableData } from "@/lib/types/fixture"
 import TopBar from "@/app/(main)/components/TopBar"
 import { DataTable } from "./DataTable"
+import { parseTableParams } from "@/lib/utils/parseTableParams"
 
 interface AdminPageProps {
     searchParams: Promise<{
@@ -9,19 +10,28 @@ interface AdminPageProps {
         pageSize?: string
         sortBy?: string
         sortOrder?: "asc" | "desc"
+        status?: string[]
     }>
 }
 
 export default async function AdminPage({ searchParams }: AdminPageProps) {
-    const { page = "1", pageSize: pageSizeParam = "20", sortBy = "matchday", sortOrder = "asc" } = await searchParams
+    const params = await searchParams
 
-    const currentPage = parseInt(page)
-    const pageSize = parseInt(pageSizeParam)
+    const { currentPage, pageSize, sortBy, sortOrder, statuses } =
+        parseTableParams(params)
 
-    const totalFixtureCount = await prisma.fixture.count()
+    const where = {
+        status: {}
+    }
+
+    if(statuses.length > 0) {
+        where.status = {in: statuses}
+    }
+
+    const totalFixtureCount = await prisma.fixture.count({where})
     const totalPages = Math.ceil(totalFixtureCount / pageSize)
 
-     const paginationInfo = {
+    const paginationInfo = {
         currentPage,
         totalPages,
         pageSize,
@@ -30,9 +40,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         hasPreviousPage: currentPage > 1,
     }
 
-
     const fixturesRawData = await prisma.fixture.findMany({
-        orderBy: { [sortBy]: sortOrder},
+        where,
+        orderBy: { [sortBy]: sortOrder },
         skip: (currentPage - 1) * pageSize,
         take: pageSize,
         include: {
@@ -46,7 +56,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         return {
             id: fixture.id,
             utcDate: fixture.utcDate.toISOString(),
-            status: fixture.status,
+            status: fixture.status as FixtureStatus,
             competition: "",
             homeTeam: fixture.homeTeam.name,
             awayTeam: fixture.awayTeam.name,

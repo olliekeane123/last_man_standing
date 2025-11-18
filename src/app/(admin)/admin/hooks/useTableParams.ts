@@ -11,12 +11,14 @@ export function useTableParams() {
         const sortBy = searchParams.get("sortBy") || "matchday"
         const sortOrder =
             (searchParams.get("sortOrder") as "asc" | "desc") || "asc"
+        const status = searchParams.getAll("status")
 
         return {
             page,
             pageSize,
             sortBy,
             sortOrder,
+            status,
         }
     }
 
@@ -26,6 +28,12 @@ export function useTableParams() {
         Object.entries(updates).forEach(([key, value]) => {
             if (value === undefined || value === null) {
                 params.delete(key)
+            } else if (Array.isArray(value)) {
+                params.delete(key)
+
+                value.forEach((item) => {
+                    params.append(key, item.toString())
+                })
             } else {
                 params.set(key, value.toString())
             }
@@ -41,6 +49,6 @@ export function useTableParams() {
     return {
         params: getCurrentParams(),
         updateParams,
-        navigateToPage
+        navigateToPage,
     }
 }

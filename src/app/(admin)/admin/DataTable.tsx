@@ -21,6 +21,7 @@ import { FixtureTableData } from "@/lib/types/fixture"
 import { createColumns } from "./createColumns"
 import { useState } from "react"
 import EditFixtureDialog from "./EditFIxtureDialog"
+import FiltersBar from "./FiltersBar"
 
 type PaginationInfo = {
     currentPage: number
@@ -67,6 +68,7 @@ export function DataTable({ data, pagination }: DataTableProps) {
                 setDialogOpen={setDialogOpen}
                 selectedRow={selectedRow}
             />
+            <FiltersBar />
             <div className="overflow-hidden rounded-md border">
                 <Table>
                     <TableHeader>
