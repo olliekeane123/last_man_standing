@@ -71,7 +71,6 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             <div className="flex justify-center">
                
                     <DataTable data={fixtures} pagination={paginationInfo} />
-                
             </div>
         </>
     )
