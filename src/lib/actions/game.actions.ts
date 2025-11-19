@@ -7,6 +7,7 @@ import {
     createGameService,
     getAllGamesByUserService,
 } from "../services/gameService"
+import { isDynamicServerError } from "next/dist/client/components/hooks-server-context"
 
 export async function createGame({ title }: CreateGameFormData) {
     try {
@@ -19,13 +20,12 @@ export async function createGame({ title }: CreateGameFormData) {
         if (!user) {
             throw new Error("Unable to retrieve user from database")
         }
-        
+
         const game = await createGameService(title, user.id)
         return {
             success: true,
             game,
         }
-
     } catch (error) {
         console.error("Failed to create game:", error)
         return {
@@ -55,8 +55,10 @@ export async function getAllGamesByUser() {
             success: true,
             games,
         }
-
     } catch (error) {
+        if (isDynamicServerError(error)) {
+            throw error
+        }
         console.error("Failed to fetch user's games:", error)
         return {
             success: false,
