@@ -11,16 +11,24 @@ const isPublicRoute = createRouteMatcher([
 const isAdminRoute = createRouteMatcher(["/admin(.*)"])
 
 export default clerkMiddleware(async (auth, request) => {
-    if (
-        isAdminRoute(request) &&
-        (await auth()).sessionClaims?.metadata?.role !== "admin"
-    ) {
-        const url = new URL("/", request.url)
-        return NextResponse.redirect(url)
-    }
+    try {
+        const { sessionClaims } = await auth()
+        console.log("Session Claims", sessionClaims)
 
-    if (!isPublicRoute(request)) {
-        await auth.protect()
+        if (
+            isAdminRoute(request) &&
+            sessionClaims?.metadata?.role !== "admin"
+        ) {
+            const url = new URL("/", request.url)
+            return NextResponse.redirect(url)
+        }
+
+        if (!isPublicRoute(request)) {
+            await auth.protect()
+        }
+    } catch (error) {
+        console.error("Middleware error:", error)
+        throw error
     }
 })
 
