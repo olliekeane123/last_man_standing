@@ -21,11 +21,14 @@ import {
 } from "@/lib/types/schemas/fixturesSchema"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ALL_FIXTURE_STATUSES, FixtureStatus } from "@/lib/types/fixture"
+import { useState } from "react"
 
 export default function FiltersBar() {
     const { params, updateParams } = useTableParams()
+    const [open, setOpen] = useState(false)
 
     function onSubmit(data: FixturesFiltersFormData) {
+        setOpen(false)
         updateParams({ status: data.statuses })
     }
 
@@ -40,7 +43,7 @@ export default function FiltersBar() {
 
     return (
         <div className="flex items-center py-4 ml-4">
-            <Popover>
+            <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button variant="outline">Filters</Button>
                 </PopoverTrigger>

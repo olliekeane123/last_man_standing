@@ -69,9 +69,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         <>
             <TopBar />
             <div className="flex justify-center">
-                <div className="p-4 max-w-7xl">
+               
                     <DataTable data={fixtures} pagination={paginationInfo} />
-                </div>
+                
             </div>
         </>
     )

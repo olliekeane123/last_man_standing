@@ -62,7 +62,7 @@ export function DataTable({ data, pagination }: DataTableProps) {
     }
 
     return (
-        <div>
+        <div className="w-2xl lg:w-5xl xl:w-7xl">
             <EditFixtureDialog
                 dialogOpen={dialogOpen}
                 setDialogOpen={setDialogOpen}
