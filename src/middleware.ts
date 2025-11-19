@@ -13,8 +13,6 @@ const isAdminRoute = createRouteMatcher(["/admin(.*)"])
 export default clerkMiddleware(async (auth, request) => {
     try {
         const { sessionClaims } = await auth()
-        console.log("Session Claims", sessionClaims)
-
         if (
             isAdminRoute(request) &&
             sessionClaims?.metadata?.role !== "admin"
