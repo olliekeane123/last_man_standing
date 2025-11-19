@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma"
 import { fetchFixturesForCompetition } from "@/lib/external-api/footballData/fixtures"
 import { FootballFixture } from "@/lib/types/schemas/footballApiSchemas"
 
-export async function seedAllFixtures() {
+export async function syncAllFixtures() {
     const competitions = await prisma.competition.findMany()
 
     for (const competition of competitions) {
