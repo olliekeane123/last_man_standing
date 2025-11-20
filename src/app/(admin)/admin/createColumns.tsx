@@ -62,7 +62,7 @@ export function createColumns(
                 }
                 return (
                     <Button variant="ghost" onClick={handleSort}>
-                        Matchday
+                        MD
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 )
@@ -70,7 +70,7 @@ export function createColumns(
         },
         {
             accessorKey: "gameweek",
-            header: "Gameweek",
+            header: "GW",
         },
         {
             id: "actions",
