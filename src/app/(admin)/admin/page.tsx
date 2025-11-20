@@ -50,6 +50,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             homeTeam: true,
             awayTeam: true,
             gameweek: true,
+            Competition: true,
         },
     })
 
@@ -58,7 +59,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             id: fixture.id,
             utcDate: fixture.utcDate.toISOString(),
             status: fixture.status as FixtureStatus,
-            competition: "",
+            competition: fixture.Competition?.name || "",
             homeTeam: fixture.homeTeam.name,
             awayTeam: fixture.awayTeam.name,
             matchday: fixture.matchday,
