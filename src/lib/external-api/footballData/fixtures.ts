@@ -2,11 +2,12 @@ import {
     FootballFixture,
     FootballFixturesResponseSchema,
 } from "@/lib/types/schemas/footballApiSchemas"
-import { env } from "@/lib/env"
+import { getEnv } from "@/lib/env"
 import { COMPETITIONS } from "@/lib/competitions"
-import { footabllDataRequest } from "@/lib/external-api/footballData/client"
+import { footballDataRequest } from "@/lib/external-api/footballData/client"
 
 export default async function fetchAllFixtures(): Promise<FootballFixture[]> {
+    const env = getEnv()
     try {
         const fixturePromises = COMPETITIONS.map(async ({ code }) => {
             const response = await fetch(
@@ -48,7 +49,7 @@ export default async function fetchAllFixtures(): Promise<FootballFixture[]> {
 export async function fetchFixturesForCompetition(
     competitionCode: number
 ): Promise<FootballFixture[]> {
-    const data = await footabllDataRequest(
+    const data = await footballDataRequest(
         `competitions/${competitionCode}/matches`
     )
     const parsed = FootballFixturesResponseSchema.safeParse(data)

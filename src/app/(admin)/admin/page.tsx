@@ -3,6 +3,7 @@ import { FixtureStatus, FixtureTableData } from "@/lib/types/fixture"
 import TopBar from "@/app/(main)/components/TopBar"
 import { DataTable } from "./DataTable"
 import { parseTableParams } from "@/lib/utils/parseTableParams"
+import { SyncFixturesButton } from "./SyncFixturesButton"
 
 interface AdminPageProps {
     searchParams: Promise<{
@@ -21,14 +22,14 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         parseTableParams(params)
 
     const where = {
-        status: {}
+        status: {},
     }
 
-    if(statuses.length > 0) {
-        where.status = {in: statuses}
+    if (statuses.length > 0) {
+        where.status = { in: statuses }
     }
 
-    const totalFixtureCount = await prisma.fixture.count({where})
+    const totalFixtureCount = await prisma.fixture.count({ where })
     const totalPages = Math.ceil(totalFixtureCount / pageSize)
 
     const paginationInfo = {
@@ -69,9 +70,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         <>
             <TopBar />
             <div className="flex justify-center">
-               
-                    <DataTable data={fixtures} pagination={paginationInfo} />
+                <DataTable data={fixtures} pagination={paginationInfo} />
             </div>
+            <SyncFixturesButton />
         </>
     )
 }

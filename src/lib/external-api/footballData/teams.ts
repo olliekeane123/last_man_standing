@@ -1,14 +1,15 @@
-import { env } from "@/lib/env"
+import { getEnv } from "@/lib/env"
 import { COMPETITIONS } from "@/lib/competitions"
 import {
     FootballTeam,
     FootballTeamsResponseSchema,
 } from "@/lib/types/schemas/footballApiSchemas"
-import { footabllDataRequest } from "@/lib/external-api/footballData/client"
+import { footballDataRequest } from "@/lib/external-api/footballData/client"
 
 export default async function fetchAllTeams(): Promise<
     (FootballTeam & { compId: number })[]
 > {
+    const env = getEnv()
     try {
         const teamPromises = COMPETITIONS.map(async ({ id }) => {
             const response = await fetch(
@@ -57,7 +58,7 @@ export default async function fetchAllTeams(): Promise<
 export async function fetchTeamsForCompetition(
     competitionCode: number
 ): Promise<(FootballTeam & { compId: number })[]> {
-    const data = await footabllDataRequest(
+    const data = await footballDataRequest(
         `competitions/${competitionCode}/teams`
     )
     const parsed = FootballTeamsResponseSchema.safeParse(data)

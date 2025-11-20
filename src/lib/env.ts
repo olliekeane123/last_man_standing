@@ -11,4 +11,13 @@ const envSchema = z.object({
     NEXTAUTH_SECRET: z.string().nonempty(),
 })
 
-export const env = envSchema.parse(process.env)
+let _env: z.infer<typeof envSchema> | null = null
+
+export function getEnv() {
+    if (!_env) {
+        _env = envSchema.parse(process.env)
+    }
+    return _env
+}
+
+// export const env = envSchema.parse(process.env)
