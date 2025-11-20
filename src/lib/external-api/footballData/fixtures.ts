@@ -6,6 +6,8 @@ import { getEnv } from "@/lib/env"
 import { COMPETITIONS } from "@/lib/competitions"
 import { footballDataRequest } from "@/lib/external-api/footballData/client"
 
+
+// NOT IN USE (USING FETCH BY COMPETITION BELOW)
 export default async function fetchAllFixtures(): Promise<FootballFixture[]> {
     const env = getEnv()
     try {

@@ -58,7 +58,7 @@ export async function getAllGamesByUser() {
     } catch (error) {
         if (isDynamicServerError(error)) {
             throw error
-        }
+        } // THROWS ERROR WHICH ALLOWS NEXTJS TO KNOW PAGE IS DYNAMIC
         console.error("Failed to fetch user's games:", error)
         return {
             success: false,

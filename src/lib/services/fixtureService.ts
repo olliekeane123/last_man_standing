@@ -20,6 +20,7 @@ export async function syncAllFixtures() {
     }
 }
 
+// TODO: SEPARATE BATCH LOGIC FROM FETCH FIXTURES BY COMPETITION
 export async function syncAllFixturesForCompetition(
     competitionCode: number
 ): Promise<FootballFixture[]> {
