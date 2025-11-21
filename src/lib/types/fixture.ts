@@ -9,7 +9,20 @@ export type FixtureTableData = {
     gameweek: number | "null"
 }
 
-export type FixtureStatus = "SCHEDULED" | "TIMED" | "IN_PLAY" | "PAUSED" | "FINISHED" | "SUSPENDED" | "POSTPONED" | "CANCELLED" | "AWARDED"
+export type SyncFixtureOptions = {
+    syncGameweek: boolean
+}
+
+export type FixtureStatus =
+    | "SCHEDULED"
+    | "TIMED"
+    | "IN_PLAY"
+    | "PAUSED"
+    | "FINISHED"
+    | "SUSPENDED"
+    | "POSTPONED"
+    | "CANCELLED"
+    | "AWARDED"
 
 export const ALL_FIXTURE_STATUSES = [
     "SCHEDULED",
@@ -21,4 +34,4 @@ export const ALL_FIXTURE_STATUSES = [
     "POSTPONED",
     "CANCELLED",
     "AWARDED",
-] as const;
+] as const

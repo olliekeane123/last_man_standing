@@ -2,8 +2,13 @@ import prisma from "@/lib/prisma"
 import { fetchFixturesForCompetition } from "@/lib/external-api/footballData/fixtures"
 import { FootballFixture } from "@/lib/types/schemas/footballApiSchemas"
 import { Prisma } from "@prisma/client"
+import { SyncFixtureOptions } from "../types/fixture"
 
-export async function syncAllFixtures() {
+export async function syncAllFixtures(
+    options: SyncFixtureOptions = { syncGameweek: false }
+) {
+    const { syncGameweek } = options
+
     const competitions = await prisma.competition.findMany()
 
     for (const competition of competitions) {
@@ -11,7 +16,7 @@ export async function syncAllFixtures() {
             console.log(
                 `Seeding fixtures for competition: ${competition.name} (${competition.apiId})`
             )
-            await syncAllFixturesForCompetition(competition.apiId)
+            await syncAllFixturesForCompetition(competition.apiId, syncGameweek)
         } catch (error) {
             console.error(
                 `Failed to seed fixtures for competition ${competition.name} (${competition.apiId}):`,
@@ -23,12 +28,14 @@ export async function syncAllFixtures() {
 
 // TODO: SEPARATE BATCH LOGIC FROM FETCH FIXTURES BY COMPETITION
 export async function syncAllFixturesForCompetition(
-    competitionCode: number
+    competitionCode: number,
+    syncGameweek: boolean
 ): Promise<FootballFixture[]> {
     try {
         const externalFixtures = await fetchFixturesForCompetition(
             competitionCode
         )
+        console.log("Include Gameweek Sync:", syncGameweek)
 
         const batchSize = 10
         for (let i = 0; i < externalFixtures.length; i += batchSize) {
@@ -41,7 +48,9 @@ export async function syncAllFixturesForCompetition(
             await prisma.$transaction(
                 async (tx) => {
                     await Promise.all(
-                        batch.map((fixture) => upsertFixture(fixture, tx))
+                        batch.map((fixture) =>
+                            upsertFixture(fixture, tx, syncGameweek)
+                        )
                     )
                 },
                 {
@@ -59,17 +68,21 @@ export async function syncAllFixturesForCompetition(
 
 async function upsertFixture(
     rawFixtureData: FootballFixture,
-    tx: Prisma.TransactionClient
+    tx: Prisma.TransactionClient,
+    syncGameweek: boolean
 ): Promise<void> {
     try {
-        const gameweek = await tx.gameweek.upsert({
-            where: { gameweekNumber: rawFixtureData.matchday },
-            update: {},
-            create: {
-                gameweekNumber: rawFixtureData.matchday,
-                deadline: new Date().toISOString(),
-            },
-        })
+        let gameweek: { id: string } | null = null
+        if (syncGameweek) {
+            gameweek = await tx.gameweek.upsert({
+                where: { gameweekNumber: rawFixtureData.matchday },
+                update: {},
+                create: {
+                    gameweekNumber: rawFixtureData.matchday,
+                    deadline: new Date().toISOString(),
+                },
+            })
+        }
 
         await tx.fixture.upsert({
             where: { apiId: rawFixtureData.id },
@@ -78,7 +91,7 @@ async function upsertFixture(
                 matchday: rawFixtureData.matchday,
                 utcDate: new Date(rawFixtureData.utcDate),
                 score: rawFixtureData.score,
-                gameweek: { connect: { id: gameweek.id } },
+                ...(gameweek && { gameweek: { connect: { id: gameweek.id } } }),
                 apiLastUpdated: new Date(rawFixtureData.lastUpdated),
             },
             create: {
@@ -96,7 +109,7 @@ async function upsertFixture(
                 status: rawFixtureData.status,
                 matchday: rawFixtureData.matchday,
                 score: rawFixtureData.score,
-                gameweek: { connect: { id: gameweek.id } },
+                ...(gameweek && { gameweek: { connect: { id: gameweek.id } } }),
                 apiLastUpdated: new Date(rawFixtureData.lastUpdated),
             },
         })
