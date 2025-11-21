@@ -1,10 +1,10 @@
-import { syncAllFixtures } from "@/lib/services/fixtureService";
+import { syncAllFixturesService } from "@/lib/services/fixtureService"
 
 export async function syncAllFixturesJob() {
     console.log("Starting scheduled fixture sync...")
 
     try {
-        await syncAllFixtures()
+        await syncAllFixturesService()
         console.log("Scheduled fixture sync completed successfully")
     } catch (error) {
         console.error("Scheduled fixture sync failed:", error)

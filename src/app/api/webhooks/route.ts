@@ -1,7 +1,7 @@
 import {
     deleteUserWithClerkId,
     upsertUserWithClerkData,
-} from "@/lib/actions/user.actions"
+} from "@/lib/utils/userClerk"
 import { DeletedObjectJSON, UserJSON } from "@clerk/nextjs/server"
 import { verifyWebhook } from "@clerk/nextjs/webhooks"
 import { NextRequest } from "next/server"

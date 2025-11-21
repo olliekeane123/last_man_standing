@@ -5,7 +5,7 @@ dotenv.config({ path: path.resolve(__dirname, "../../.env.local") })
 
 import { seedCompetitions } from "@/seeds/lib/seedCompetitions"
 import { seedAllTeams } from "@/lib/services/teamService"
-import { syncAllFixtures } from "@/lib/services/fixtureService"
+import { syncAllFixturesService } from "@/lib/services/fixtureService"
 
 async function seed() {
     console.log("Beginning seeding")
@@ -16,7 +16,7 @@ async function seed() {
     await seedAllTeams()
     console.log("Teams seeded")
 
-    await syncAllFixtures()
+    await syncAllFixturesService()
     console.log("Fixtures seeded")
 
     console.log("Seed completed")

@@ -1,5 +1,5 @@
 import { MatchweekFixtures } from "../components/MatchweekFixtures"
-import { getUserByClerkId } from "@/lib/actions/user.actions"
+import { getUserByClerkId } from "@/lib/utils/userClerk"
 import { auth } from "@clerk/nextjs/server"
 
 export default async function Home() {

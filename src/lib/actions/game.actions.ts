@@ -2,14 +2,14 @@
 
 import { auth } from "@clerk/nextjs/server"
 import { CreateGameFormData } from "../types/game"
-import { getUserByClerkId } from "./user.actions"
+import { getUserByClerkId } from "@/lib/utils/userClerk"
 import {
     createGameService,
     getAllGamesByUserService,
 } from "../services/gameService"
 import { isDynamicServerError } from "next/dist/client/components/hooks-server-context"
 
-export async function createGame({ title }: CreateGameFormData) {
+export async function createGameAction({ title }: CreateGameFormData) {
     try {
         const { userId } = await auth()
 
@@ -38,7 +38,7 @@ export async function createGame({ title }: CreateGameFormData) {
     }
 }
 
-export async function getAllGamesByUser() {
+export async function getAllGamesByUserAction() {
     try {
         const { userId } = await auth()
 

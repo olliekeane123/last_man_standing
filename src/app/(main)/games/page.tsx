@@ -1,8 +1,7 @@
-import { getAllGamesByUser } from "@/lib/actions/game.actions"
+import { getAllGamesByUserAction } from "@/lib/actions/game.actions"
 
 export default async function Game() {
-
-    const games = await getAllGamesByUser()
+    const games = await getAllGamesByUserAction()
 
     if (!games.success) {
         return <div>Error.</div>

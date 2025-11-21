@@ -23,7 +23,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Dispatch, SetStateAction } from "react"
 import { useForm } from "react-hook-form"
-import { editFixureDataAction } from "./actions"
+import { editFixureDataAction } from "@/lib/actions/admin.actions"
 
 type EditFixtureDialogProps = {
     dialogOpen: boolean

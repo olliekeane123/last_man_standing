@@ -4,7 +4,7 @@ import { FootballFixture } from "@/lib/types/schemas/footballApiSchemas"
 import { Prisma } from "@prisma/client"
 import { SyncFixtureOptions } from "../types/fixture"
 
-export async function syncAllFixtures(
+export async function syncAllFixturesService(
     options: SyncFixtureOptions = { syncGameweek: false }
 ) {
     const { syncGameweek } = options
@@ -27,7 +27,7 @@ export async function syncAllFixtures(
 }
 
 // TODO: SEPARATE BATCH LOGIC FROM FETCH FIXTURES BY COMPETITION
-export async function syncAllFixturesForCompetition(
+async function syncAllFixturesForCompetition(
     competitionCode: number,
     syncGameweek: boolean
 ): Promise<FootballFixture[]> {

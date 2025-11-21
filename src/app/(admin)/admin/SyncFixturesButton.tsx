@@ -1,6 +1,6 @@
 "use client"
 
-import { syncAllFixturesAction } from "./actions"
+import { syncAllFixturesAction } from "@/lib/actions/admin.actions"
 
 export function SyncFixturesButton() {
     const actionHandler = async (formData: FormData) => {
