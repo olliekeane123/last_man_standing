@@ -23,7 +23,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Dispatch, SetStateAction } from "react"
 import { useForm } from "react-hook-form"
-import { editFixureDataAction } from "@/lib/actions/admin.actions"
+import { editFixtureDataAction } from "@/lib/actions/admin.actions"
 
 type EditFixtureDialogProps = {
     dialogOpen: boolean
@@ -57,9 +57,9 @@ export default function EditFixtureDialog({
 
             if (Object.prototype.hasOwnProperty.call(newFixtureData, formKey)) {
                 newFixtureData[formKey] = value
-            }    
+            }
         }
-        editFixureDataAction(newFixtureData)
+        editFixtureDataAction(newFixtureData)
     }
 
     return (

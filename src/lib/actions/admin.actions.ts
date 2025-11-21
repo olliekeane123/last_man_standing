@@ -15,7 +15,7 @@ export async function syncAllFixturesAction({
     }
 }
 
-export async function editFixureDataAction(newFixtureData: FixtureTableData) {
+export async function editFixtureDataAction(newFixtureData: FixtureTableData) {
     try {
         // NEED TO ADD LOGIC HERE
     } catch (error) {
