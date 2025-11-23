@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma"
 import { fetchFixturesForCompetition } from "@/lib/external-api/footballData/fixtures"
 import { FootballFixture } from "@/lib/types/schemas/footballApiSchemas"
 import { Prisma } from "@prisma/client"
-import { SyncFixtureOptions } from "../types/fixture"
+import { FixtureTableData, SyncFixtureOptions } from "../types/fixture"
 
 export async function syncAllFixturesService(
     options: SyncFixtureOptions = { syncGameweek: false }
@@ -116,4 +116,35 @@ async function upsertFixture(
     } catch (error) {
         throw error
     }
+}
+
+export async function updateFixture({
+    id,
+    ...newData
+}: Partial<FixtureTableData>) {
+    const { gameweek } = newData
+
+    let newGameweek: { id: string } | null = null
+
+    if (typeof gameweek === "number") {
+        newGameweek = await prisma.gameweek.upsert({
+            where: { gameweekNumber: gameweek },
+            update: {},
+            create: {
+                gameweekNumber: gameweek,
+                deadline: new Date().toISOString(),
+            },
+        })
+    }
+
+    await prisma.fixture.update({
+        where: { id },
+        data: {
+            // For now we just allow updates for status and gameweek
+            ...(newData.status && { status: newData.status }),
+            ...(newGameweek && {
+                gameweek: { connect: { id: newGameweek.id } },
+            }),
+        },
+    })
 }

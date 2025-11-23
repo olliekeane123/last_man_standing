@@ -51,15 +51,22 @@ export default function EditFixtureDialog({
     }
 
     function onSubmit(data: EditFixtureFormData) {
-        const newFixtureData = { ...selectedRow! }
-        for (const [key, value] of Object.entries(data)) {
-            const formKey = key as keyof EditFixtureFormData
-
-            if (Object.prototype.hasOwnProperty.call(newFixtureData, formKey)) {
-                newFixtureData[formKey] = value
-            }
+        const newData: { id: string; [key: string]: string | number | Date } = {
+            id: selectedRow!.id,
         }
-        editFixtureDataAction(newFixtureData)
+
+        Object.entries(data).forEach(([key, value]) => {
+            if (Object.hasOwn(selectedRow!, key)) {
+                if (
+                    selectedRow !== null &&
+                    selectedRow[key as keyof FixtureTableData] !== value
+                ) {
+                    newData[key] = value
+                }
+            }
+        })
+
+        editFixtureDataAction(newData)
     }
 
     return (

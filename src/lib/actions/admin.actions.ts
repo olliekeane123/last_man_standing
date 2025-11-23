@@ -1,6 +1,9 @@
 "use server"
 
-import { syncAllFixturesService } from "@/lib/services/fixtureService"
+import {
+    syncAllFixturesService,
+    updateFixture,
+} from "@/lib/services/fixtureService"
 import { FixtureTableData, SyncFixtureOptions } from "@/lib/types/fixture"
 
 export async function syncAllFixturesAction({
@@ -15,9 +18,11 @@ export async function syncAllFixturesAction({
     }
 }
 
-export async function editFixtureDataAction(newFixtureData: FixtureTableData) {
+export async function editFixtureDataAction(
+    newData: Partial<FixtureTableData>
+) {
     try {
-        // NEED TO ADD LOGIC HERE
+        await updateFixture(newData)
     } catch (error) {
         console.error("Edit fixture data failed:", error)
         throw error
