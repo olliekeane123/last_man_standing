@@ -12,6 +12,8 @@ export function useTableParams() {
         const sortOrder =
             (searchParams.get("sortOrder") as "asc" | "desc") || "asc"
         const status = searchParams.getAll("status")
+        const dateStart = searchParams.get("dateStart") || undefined
+        const dateEnd = searchParams.get("dateEnd") || undefined
 
         return {
             page,
@@ -19,6 +21,8 @@ export function useTableParams() {
             sortBy,
             sortOrder,
             status,
+            dateStart,
+            dateEnd
         }
     }
 

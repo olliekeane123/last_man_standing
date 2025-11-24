@@ -4,6 +4,8 @@ export type UnparsedTableParams = {
     sortBy?: string
     sortOrder?: "asc" | "desc"
     status?: string[] | string
+    dateStart?: string
+    dateEnd?: string
 }
 
 export type TableParams = {
@@ -12,4 +14,6 @@ export type TableParams = {
     sortBy?: string
     sortOrder?: "asc" | "desc"
     status?: string[]
+    dateStart?: string
+    dateEnd?: string
 }

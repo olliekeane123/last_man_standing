@@ -12,21 +12,29 @@ interface AdminPageProps {
         sortBy?: string
         sortOrder?: "asc" | "desc"
         status?: string[]
+        dateStart?: string
+        dateEnd?: string
     }>
 }
 
 export default async function AdminPage({ searchParams }: AdminPageProps) {
     const params = await searchParams
 
-    const { currentPage, pageSize, sortBy, sortOrder, statuses } =
-        parseTableParams(params)
+    const {
+        currentPage,
+        pageSize,
+        sortBy,
+        sortOrder,
+        statuses,
+        dateStart,
+        dateEnd,
+    } = parseTableParams(params)
 
     const where = {
-        status: {},
-    }
-
-    if (statuses.length > 0) {
-        where.status = { in: statuses }
+        ...(statuses.length > 0 && { status: { in: statuses } }),
+        ...(dateStart || dateEnd
+            ? { utcDate: { gte: dateStart, lte: dateEnd } }
+            : {}),
     }
 
     const totalFixtureCount = await prisma.fixture.count({ where })

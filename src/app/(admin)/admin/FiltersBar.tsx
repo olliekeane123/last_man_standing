@@ -22,6 +22,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { ALL_FIXTURE_STATUSES, FixtureStatus } from "@/lib/types/fixture"
 import { useState } from "react"
+import { Input } from "@/components/ui/input"
 
 export default function FiltersBar() {
     const { params, updateParams } = useTableParams()
@@ -29,7 +30,11 @@ export default function FiltersBar() {
 
     function onSubmit(data: FixturesFiltersFormData) {
         setOpen(false)
-        updateParams({ status: data.statuses })
+        updateParams({
+            status: data.statuses,
+            dateStart: data.dateStart,
+            dateEnd: data.dateEnd,
+        })
     }
 
     const form = useForm<FixturesFiltersFormData>({
@@ -38,6 +43,8 @@ export default function FiltersBar() {
             statuses: (params.status && Array.isArray(params.status)
                 ? params.status
                 : []) as FixtureStatus[],
+            dateStart: params.dateStart,
+            dateEnd: params.dateEnd,
         },
     })
 
@@ -49,9 +56,12 @@ export default function FiltersBar() {
                 </PopoverTrigger>
                 <PopoverContent className="w-80" align="start">
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)}>
-                            <div className="flex flex-col">
-                                <p className="text-muted-foreground text-sm">
+                        <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-4"
+                        >
+                            <div className="flex flex-col space-y-6">
+                                <p className="text-muted-foreground text-sm mb-4">
                                     Set the filters for the fixtures.
                                 </p>
 
@@ -138,6 +148,36 @@ export default function FiltersBar() {
                                                 )}
                                             </div>
                                             <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="dateStart"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Date</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    type="date"
+                                                ></Input>
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="dateEnd"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Date</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    type="date"
+                                                ></Input>
+                                            </FormControl>
                                         </FormItem>
                                     )}
                                 />

@@ -37,8 +37,8 @@ export default function EditFixtureDialog({
     setDialogOpen,
     selectedRow,
 }: EditFixtureDialogProps) {
-    const [isSubmissionError, setIsSubmissionError] = useState(false)
-    const [isSuccess, setIsSuccess] = useState(false)
+    const [_isSubmissionError, setIsSubmissionError] = useState(false)
+    const [_isSuccess, setIsSuccess] = useState(false)
 
     const router = useRouter()
     const form = useForm<EditFixtureFormData>({
@@ -83,6 +83,7 @@ export default function EditFixtureDialog({
             setIsSuccess(true)
         } catch (error) {
             setIsSubmissionError(true)
+            console.error(error)
         }
     }
 
