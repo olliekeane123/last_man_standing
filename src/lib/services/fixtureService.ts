@@ -122,29 +122,34 @@ export async function updateFixture({
     id,
     ...newData
 }: Partial<FixtureTableData>) {
-    const { gameweek } = newData
+    try {
+        const { gameweek } = newData
 
-    let newGameweek: { id: string } | null = null
+        let newGameweek: { id: string } | null = null
 
-    if (typeof gameweek === "number") {
-        newGameweek = await prisma.gameweek.upsert({
-            where: { gameweekNumber: gameweek },
-            update: {},
-            create: {
-                gameweekNumber: gameweek,
-                deadline: new Date().toISOString(),
+        if (typeof gameweek === "number") {
+            newGameweek = await prisma.gameweek.upsert({
+                where: { gameweekNumber: gameweek },
+                update: {},
+                create: {
+                    gameweekNumber: gameweek,
+                    deadline: new Date().toISOString(),
+                },
+            })
+        }
+
+        await prisma.fixture.update({
+            where: { id },
+            data: {
+                // For now we just allow updates for status and gameweek
+                ...(newData.status && { status: newData.status }),
+                ...(newGameweek && {
+                    gameweek: { connect: { id: newGameweek.id } },
+                }),
             },
         })
+    } catch (error) {
+        console.error("Failed to update fixture:", error)
+        throw error
     }
-
-    await prisma.fixture.update({
-        where: { id },
-        data: {
-            // For now we just allow updates for status and gameweek
-            ...(newData.status && { status: newData.status }),
-            ...(newGameweek && {
-                gameweek: { connect: { id: newGameweek.id } },
-            }),
-        },
-    })
 }

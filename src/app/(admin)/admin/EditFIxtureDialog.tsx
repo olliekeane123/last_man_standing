@@ -21,9 +21,10 @@ import {
     EditFixtureFormSchema,
 } from "@/lib/types/schemas/fixturesSchema"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { useForm } from "react-hook-form"
 import { editFixtureDataAction } from "@/lib/actions/admin.actions"
+import { useRouter } from "next/navigation"
 
 type EditFixtureDialogProps = {
     dialogOpen: boolean
@@ -36,6 +37,10 @@ export default function EditFixtureDialog({
     setDialogOpen,
     selectedRow,
 }: EditFixtureDialogProps) {
+    const [isSubmissionError, setIsSubmissionError] = useState(false)
+    const [isSuccess, setIsSuccess] = useState(false)
+
+    const router = useRouter()
     const form = useForm<EditFixtureFormData>({
         resolver: zodResolver(EditFixtureFormSchema),
         defaultValues: {
@@ -50,23 +55,35 @@ export default function EditFixtureDialog({
         return null
     }
 
-    function onSubmit(data: EditFixtureFormData) {
-        const newData: { id: string; [key: string]: string | number | Date } = {
-            id: selectedRow!.id,
-        }
-
-        Object.entries(data).forEach(([key, value]) => {
-            if (Object.hasOwn(selectedRow!, key)) {
-                if (
-                    selectedRow !== null &&
-                    selectedRow[key as keyof FixtureTableData] !== value
-                ) {
-                    newData[key] = value
-                }
+    async function onSubmit(data: EditFixtureFormData) {
+        try {
+            setIsSuccess(false)
+            const newData: {
+                id: string
+                [key: string]: string | number | Date
+            } = {
+                id: selectedRow!.id,
             }
-        })
 
-        editFixtureDataAction(newData)
+            Object.entries(data).forEach(([key, value]) => {
+                if (Object.hasOwn(selectedRow!, key)) {
+                    if (
+                        selectedRow !== null &&
+                        selectedRow[key as keyof FixtureTableData] !== value
+                    ) {
+                        newData[key] = value
+                    }
+                }
+            })
+            const result = await editFixtureDataAction(newData)
+            if (!result.success) throw result.error
+
+            router.refresh()
+            setDialogOpen(false)
+            setIsSuccess(true)
+        } catch (error) {
+            setIsSubmissionError(true)
+        }
     }
 
     return (
@@ -79,7 +96,10 @@ export default function EditFixtureDialog({
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="space-y-6"
+                    >
                         <FormField
                             control={form.control}
                             name="gameweek"
@@ -103,7 +123,14 @@ export default function EditFixtureDialog({
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Submit</Button>
+                        <Button
+                            type="submit"
+                            disabled={form.formState.isSubmitting}
+                        >
+                            {form.formState.isSubmitting
+                                ? "Saving..."
+                                : "Submit"}
+                        </Button>
                     </form>
                 </Form>
             </DialogContent>

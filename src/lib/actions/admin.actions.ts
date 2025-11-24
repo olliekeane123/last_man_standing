@@ -22,9 +22,17 @@ export async function editFixtureDataAction(
     newData: Partial<FixtureTableData>
 ) {
     try {
-        await updateFixture(newData)
+        const updatedFixture = await updateFixture(newData)
+
+        return { success: true, updatedFixture }
     } catch (error) {
         console.error("Edit fixture data failed:", error)
-        throw error
+        return {
+            success: false,
+            error:
+                error instanceof Error
+                    ? error.message
+                    : "Failed to update fixture",
+        }
     }
 }
