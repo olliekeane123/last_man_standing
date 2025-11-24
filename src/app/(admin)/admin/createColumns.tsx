@@ -27,7 +27,42 @@ export function createColumns(
         },
         {
             accessorKey: "utcDate",
-            header: "Date",
+            header: () => {
+                const isAsc =
+                    currentParams.sortBy === "utcDate" &&
+                    currentParams.sortOrder === "asc"
+
+                const handleSort = () => {
+                    if (
+                        !currentParams.sortBy ||
+                        currentParams.sortBy !== "utcDate"
+                    ) {
+                        updateParams({
+                            sortBy: "utcDate",
+                            sortOrder: "asc",
+                            page: 1,
+                        })
+                    } else if (isAsc) {
+                        updateParams({
+                            sortBy: "utcDate",
+                            sortOrder: "desc",
+                            page: 1,
+                        })
+                    } else {
+                        updateParams({
+                            sortBy: undefined,
+                            sortOrder: undefined,
+                            page: 1,
+                        })
+                    }
+                }
+                return (
+                    <Button variant="ghost" onClick={handleSort}>
+                        Date
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                )
+            },
         },
         {
             accessorKey: "status",
@@ -48,16 +83,33 @@ export function createColumns(
         {
             accessorKey: "matchday",
             header: () => {
-                const isAsc = currentParams.sortBy === 'matchday' && currentParams.sortOrder === 'asc'
+                const isAsc =
+                    currentParams.sortBy === "matchday" &&
+                    currentParams.sortOrder === "asc"
                 // const isDesc = currentParams.sortBy === 'matchday' && currentParams.sortOrder === 'desc'
-                
+
                 const handleSort = () => {
-                    if (!currentParams.sortBy || currentParams.sortBy !== 'matchday') {
-                        updateParams({ sortBy: 'matchday', sortOrder: 'asc', page: 1 })
+                    if (
+                        !currentParams.sortBy ||
+                        currentParams.sortBy !== "matchday"
+                    ) {
+                        updateParams({
+                            sortBy: "matchday",
+                            sortOrder: "asc",
+                            page: 1,
+                        })
                     } else if (isAsc) {
-                        updateParams({ sortBy: 'matchday', sortOrder: 'desc', page: 1 })
+                        updateParams({
+                            sortBy: "matchday",
+                            sortOrder: "desc",
+                            page: 1,
+                        })
                     } else {
-                        updateParams({ sortBy: undefined, sortOrder: undefined, page: 1 })
+                        updateParams({
+                            sortBy: undefined,
+                            sortOrder: undefined,
+                            page: 1,
+                        })
                     }
                 }
                 return (
@@ -88,9 +140,7 @@ export function createColumns(
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem
-                                onClick={() =>
-                                    onEdit(row.original)
-                                }
+                                onClick={() => onEdit(row.original)}
                             >
                                 Edit
                             </DropdownMenuItem>
