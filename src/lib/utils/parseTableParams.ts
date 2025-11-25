@@ -30,9 +30,11 @@ export function parseTableParams(searchParams: UnparsedTableParams) {
     const dateStart = searchParams.dateStart
         ? new Date(searchParams.dateStart)
         : undefined
-    const dateEnd = searchParams.dateEnd
-        ? new Date(searchParams.dateEnd)
-        : undefined
+    let dateEnd = undefined
+    if (searchParams.dateEnd) {
+        dateEnd = new Date(searchParams.dateEnd)
+        dateEnd.setDate(dateEnd.getDate() + 1)
+    }
 
     return {
         currentPage,

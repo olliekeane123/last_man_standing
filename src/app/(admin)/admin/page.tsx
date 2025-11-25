@@ -33,7 +33,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     const where = {
         ...(statuses.length > 0 && { status: { in: statuses } }),
         ...(dateStart || dateEnd
-            ? { utcDate: { gte: dateStart, lte: dateEnd } }
+            ? { utcDate: { gte: dateStart, lt: dateEnd } }
             : {}),
     }
 
