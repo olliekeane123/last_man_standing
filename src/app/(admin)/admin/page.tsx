@@ -4,6 +4,7 @@ import TopBar from "@/app/(main)/components/TopBar"
 import { DataTable } from "./DataTable"
 import { parseTableParams } from "@/lib/utils/parseTableParams"
 import { SyncFixturesButton } from "./SyncFixturesButton"
+import { formatDateForReadability } from "@/lib/utils/formatDateForReadability"
 
 interface AdminPageProps {
     searchParams: Promise<{
@@ -65,7 +66,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     const fixtures: FixtureTableData[] = fixturesRawData.map((fixture) => {
         return {
             id: fixture.id,
-            utcDate: fixture.utcDate.toISOString(),
+            utcDate: formatDateForReadability(fixture.utcDate),
             status: fixture.status as FixtureStatus,
             competition: fixture.Competition?.name || "",
             homeTeam: fixture.homeTeam.name,
