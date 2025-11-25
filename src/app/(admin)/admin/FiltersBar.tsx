@@ -156,7 +156,7 @@ export default function FiltersBar() {
                                     name="dateStart"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Date</FormLabel>
+                                            <FormLabel>From Date</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     {...field}
@@ -171,7 +171,7 @@ export default function FiltersBar() {
                                     name="dateEnd"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Date</FormLabel>
+                                            <FormLabel>To Date</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     {...field}
