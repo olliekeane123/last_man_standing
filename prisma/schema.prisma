@@ -23,7 +23,7 @@ model User {
 }
 
 model Game {
-    id         String @id @default(cuid())
+    id         String     @id @default(cuid())
     title      String
     gameStatus GameStatus @default(open)
 
@@ -54,7 +54,6 @@ model UserGame {
     joinedAt     DateTime @default(now())
 
     @@id([userId, gameId])
-
     @@map("userGames")
 }
 
@@ -82,6 +81,7 @@ model Gameweek {
     id             String    @id @default(cuid())
     gameweekNumber Int       @unique
     deadline       DateTime
+    isActive       Boolean   @default(false)
     fixtures       Fixture[]
     picks          Pick[]
 
