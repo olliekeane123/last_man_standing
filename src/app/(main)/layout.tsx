@@ -1,14 +1,17 @@
+import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppSideBar } from "./components/AppSideBar"
 import { Navbar } from "./components/Navbar"
-import TopBar from "./components/TopBar"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     return (
-        <div className="flex min-h-screen flex-col">
-            <TopBar />
-            <Navbar />
-            <AppSideBar/>
-            <div className="flex flex-col justify-center items-center">{children}</div>
-        </div>
+        
+            <SidebarProvider>
+                <AppSideBar />
+                <main className="w-full">
+                    <Navbar />
+                    <div className="px-4">{children}</div>
+                </main>
+            </SidebarProvider>
+        
     )
 }

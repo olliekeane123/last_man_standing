@@ -7,12 +7,13 @@ import {
     UserButton,
 } from "@clerk/nextjs"
 import { ModeToggle } from "./ModeToggle"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 
 export function Navbar() {
     return (
         <nav className="p-4 flex items-center justify-between">
             {/* LEFT */}
-            collapseButton
+            <SidebarTrigger className="rounded-xl" />
             {/* RIGHT */}
             <div className="flex items-center gap-4">
                 <Link href="/home">Dashboard</Link>
