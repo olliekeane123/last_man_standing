@@ -12,11 +12,11 @@ export async function createGameService(title: string, adminId: string) {
         const newUserGame = await tx.userGame.create({
             data: {
                 userId: adminId,
-                gameId: newGame.id
-            }
+                gameId: newGame.id,
+            },
         })
 
-        return { newGame, newUserGame };
+        return { newGame, newUserGame }
     })
 
     return newGameAndUserGame.newGame
@@ -35,4 +35,20 @@ export async function getAllGamesByUserService(userId: string) {
     const games = userGames.map((userGame) => userGame.game)
 
     return games
+}
+
+export async function getUserGameByIdService(gameId: string, userId: string) {
+    const userGame = await prisma.userGame.findUnique({
+        where: {
+            userId_gameId: {
+                userId,
+                gameId,
+            },
+        },
+        include: {
+            game: true,
+        },
+    })
+
+    return userGame
 }

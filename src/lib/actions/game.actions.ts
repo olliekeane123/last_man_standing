@@ -6,8 +6,10 @@ import { getUserByClerkId } from "@/lib/utils/userClerk"
 import {
     createGameService,
     getAllGamesByUserService,
+    getUserGameByIdService,
 } from "../services/gameService"
 import { isDynamicServerError } from "next/dist/client/components/hooks-server-context"
+import { success } from "zod"
 
 export async function createGameAction({ title }: CreateGameFormData) {
     try {
@@ -66,6 +68,36 @@ export async function getAllGamesByUserAction() {
                 error instanceof Error
                     ? error.message
                     : "Failed to fetch user's games",
+        }
+    }
+}
+
+export async function getUserGameByIdAction(gameId: string) {
+    try {
+        const { userId } = await auth()
+
+        if (!userId) {
+            throw new Error("Unable to retrieve user from clerk")
+        }
+        const { user } = await getUserByClerkId(userId)
+        if (!user) {
+            throw new Error("Unable to retrieve user from database")
+        }
+
+        const userGame = await getUserGameByIdService(gameId, user.id)
+
+        return {
+            success: true,
+            userGame,
+        }
+    } catch (error) {
+        console.error("Failed to fetch game by ID:", error)
+        return {
+            success: false,
+            error:
+                error instanceof Error
+                    ? error.message
+                    : "Failed to fetch game by ID",
         }
     }
 }

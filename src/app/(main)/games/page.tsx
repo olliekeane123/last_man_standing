@@ -1,4 +1,5 @@
 import { getAllGamesByUserAction } from "@/lib/actions/game.actions"
+import Link from "next/link"
 
 export default async function Game() {
     const games = await getAllGamesByUserAction()
@@ -10,7 +11,9 @@ export default async function Game() {
     return games.success && games!.games!.length > 0 ? (
         <div>
             {games.games?.map((game) => (
-                <h1 key={game.id}>{game.title}</h1>
+                <Link href={`/games/${game.id}`} key={game.id}>
+                    <h1>{game.title}</h1>
+                </Link>
             ))}
         </div>
     ) : (
