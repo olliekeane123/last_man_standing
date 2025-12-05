@@ -4,10 +4,10 @@ import {
     SignedOut,
     SignInButton,
     SignUpButton,
-    UserButton,
 } from "@clerk/nextjs"
 import { ModeToggle } from "./ModeToggle"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import { ThemedUserButton } from "@/components/clerk/ThemedUserButton"
 
 export function Navbar() {
     return (
@@ -30,7 +30,7 @@ export function Navbar() {
                         </SignUpButton>
                     </SignedOut>
                     <SignedIn>
-                        <UserButton />
+                        <ThemedUserButton />
                     </SignedIn>
                 </div>
             </div>
