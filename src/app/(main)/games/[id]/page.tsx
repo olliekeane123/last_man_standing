@@ -6,7 +6,7 @@ type GamePageProps = {
     params: Params
 }
 
-export default async function ProductPage(props: GamePageProps) {
+export default async function GamePage(props: GamePageProps) {
     const params = await props.params
     const { id } = params
     const game = await getUserGameByIdAction(id)
