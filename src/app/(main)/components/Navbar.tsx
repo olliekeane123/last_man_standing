@@ -1,25 +1,38 @@
-import Link from "next/link";
+import Link from "next/link"
+import {
+    SignedIn,
+    SignedOut,
+    SignInButton,
+    SignUpButton,
+    UserButton,
+} from "@clerk/nextjs"
+import { ModeToggle } from "./ModeToggle"
 
 export function Navbar() {
     return (
-        <div className="border-b-1">
-            <nav className="mx-auto flex max-w-7xl items-center justify-between gap-3 p-3">
-                <Link href="/home">
-                    <span className="bg-blue-300 text-xl font-bold">Home</span>
-                </Link>
-                <Link href="/games">
-                    <span className="bg-blue-300 text-xl font-bold">My Games</span>
-                </Link>
-                <Link href="/games/create">
-                    <span className="bg-blue-300 text-xl font-bold">Create Game</span>
-                </Link>
-                <Link href="/games/join">
-                    <span className="bg-blue-300 text-xl font-bold">Join Game</span>
-                </Link>
-                <Link href="/games/create">
-                    <span className="bg-blue-300 text-xl font-bold">Settings</span>
-                </Link>
-            </nav>
-        </div>
+        <nav className="p-4 flex items-center justify-between">
+            {/* LEFT */}
+            collapseButton
+            {/* RIGHT */}
+            <div className="flex items-center gap-4">
+                <Link href="/home">Dashboard</Link>
+                {/* THEME MENU */}
+                <ModeToggle />
+                {/* USER MENU */}
+                <div className="flex items-center gap-4">
+                    <SignedOut>
+                        <SignInButton />
+                        <SignUpButton>
+                            <button className="bg-[#6c47ff] text-ceramic-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
+                                Sign Up
+                            </button>
+                        </SignUpButton>
+                    </SignedOut>
+                    <SignedIn>
+                        <UserButton />
+                    </SignedIn>
+                </div>
+            </div>
+        </nav>
     )
 }
