@@ -18,6 +18,7 @@ model User {
 
     gamesAdministered Game[]
     gamesJoined       UserGame[]
+    gameInvites       GameInvite[]
 
     @@map("users")
 }
@@ -30,9 +31,25 @@ model Game {
     admin   User   @relation(fields: [adminId], references: [id])
     adminId String
 
-    players UserGame[]
+    players     UserGame[]
+    gameInvites GameInvite[]
 
     @@map("games")
+}
+
+model GameInvite {
+    id String @id @default(cuid())
+
+    token String @unique
+
+    expiresAt DateTime
+    createdBy User     @relation(fields: [userId], references: [id])
+    userId    String
+
+    game   Game   @relation(fields: [gameId], references: [id])
+    gameId String
+
+    @@map("gameInvites")
 }
 
 enum GameStatus {

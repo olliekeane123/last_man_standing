@@ -52,3 +52,16 @@ export async function getUserGameByIdService(gameId: string, userId: string) {
 
     return userGame
 }
+
+export async function createGameInviteService(
+    gameId: string,
+    userId: string,
+    token: string,
+    expiresAt: Date
+) {
+    const gameInvite = await prisma.gameInvite.create({
+        data: { token, userId, gameId, expiresAt },
+    })
+
+    return gameInvite
+}
