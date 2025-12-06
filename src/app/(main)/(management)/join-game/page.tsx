@@ -1,4 +1,4 @@
-export default function JoinGame() {
+export default function JoinGamePage() {
     return (
         <div>
             <h1>Join Game</h1>

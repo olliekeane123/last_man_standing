@@ -38,7 +38,7 @@ const items = [
     },
 ]
 
-export function AppSideBar() {
+export function ManagementSideBar() {
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader></SidebarHeader>
