@@ -9,10 +9,13 @@ export default async function Game() {
     }
 
     return games.success && games!.games!.length > 0 ? (
-        <div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4">
             {games.games?.map((game) => (
                 <Link href={`/games/${game.id}`} key={game.id}>
-                    <h1>{game.title}</h1>
+                    <div className="bg-primary-foreground p-4 h-40 rounded-xl">
+                        <h1>{game.title}</h1>
+                        {/* <p>{game.gameStatus}</p> */}
+                    </div>
                 </Link>
             ))}
         </div>
