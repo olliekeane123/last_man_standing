@@ -53,6 +53,13 @@ export async function getUserGameByIdService(gameId: string, userId: string) {
     return userGame
 }
 
+export async function getGameByIdService(gameId: string) {
+    const game = await prisma.game.findUnique({
+        where: { id: gameId },
+    })
+    return game
+}
+
 export async function createGameInviteService(
     gameId: string,
     userId: string,

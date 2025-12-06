@@ -5,6 +5,7 @@ import {
     createGameInviteService,
     createGameService,
     getAllGamesByUserService,
+    getGameByIdService,
     getUserGameByIdService,
 } from "../services/gameService"
 import { isDynamicServerError } from "next/dist/client/components/hooks-server-context"
@@ -68,13 +69,33 @@ export async function getUserGameByIdAction(gameId: string) {
             userGame,
         }
     } catch (error) {
-        console.error("Failed to fetch game by ID:", error)
+        console.error("Failed to fetch User Game by ID:", error)
         return {
             success: false,
             error:
                 error instanceof Error
                     ? error.message
-                    : "Failed to fetch game by ID",
+                    : "Failed to fetch User Game by ID",
+        }
+    }
+}
+
+export async function getGameByIdAction(gameId: string) {
+    try {
+        const game = await getGameByIdService(gameId)
+
+        return {
+            success: true,
+            game,
+        }
+    } catch (error) {
+        console.error("Failed to fetch Game by ID:", error)
+        return {
+            success: false,
+            error:
+                error instanceof Error
+                    ? error.message
+                    : "Failed to fetch Game by ID",
         }
     }
 }

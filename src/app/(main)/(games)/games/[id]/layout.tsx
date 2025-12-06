@@ -1,18 +1,21 @@
 import { SidebarProvider } from "@/components/ui/sidebar"
-import { GameSideBar } from "@/app/(main)/components/GameSideBar"
+import { GameSideBar } from "@/app/(main)/(games)/components/GameSideBar"
 import { Navbar } from "@/app/(main)/components/Navbar"
+import { PropsWithChildren } from "react"
 
-export default function Layout({
+interface GameLayoutPropsWithChildren extends PropsWithChildren {
+    params: Promise<{ id: string }>
+}
+
+export default async function GameLayout({
     children,
     params,
-}: {
-    children: React.ReactNode
-    params: { id: string }
-}) {
-    const gameId = params.id
+}: GameLayoutPropsWithChildren) {
+    const { id } = await params
+
     return (
         <SidebarProvider>
-            <GameSideBar gameId={gameId} />
+            <GameSideBar gameId={id} />
             <main className="w-full">
                 <Navbar />
                 <div className="px-4">{children}</div>

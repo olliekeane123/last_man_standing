@@ -11,6 +11,7 @@ import {
     SidebarMenuItem,
     SidebarRail,
 } from "@/components/ui/sidebar"
+import { getGameByIdAction } from "@/lib/actions/game.actions"
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu"
 import { Home, CrownIcon, Crown, SquarePlus } from "lucide-react"
 import Link from "next/link"
@@ -41,18 +42,22 @@ const sidebarItems = [
     },
 ]
 
-export function GameSideBar({ gameId }: GameSideBarProps) {
+export async function GameSideBar({ gameId }: GameSideBarProps) {
     const items = sidebarItems.map((item) => ({
         ...item,
         url: `/games/${gameId}${item.suffix}`,
     }))
 
+    const gameResponse = await getGameByIdAction(gameId)
+
     return (
         <Sidebar collapsible="icon">
-            <SidebarHeader></SidebarHeader>
+            <SidebarHeader>Last Man Standing</SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
+                    <SidebarGroupLabel>
+                        {gameResponse.success && gameResponse.game?.title}
+                    </SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {items.map((item) => (
