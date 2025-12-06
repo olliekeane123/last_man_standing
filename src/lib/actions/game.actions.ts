@@ -1,26 +1,17 @@
 "use server"
 
-import { auth } from "@clerk/nextjs/server"
 import { CreateGameFormData } from "../types/game"
-import { getUserByClerkId } from "@/lib/utils/userClerk"
 import {
     createGameService,
     getAllGamesByUserService,
     getUserGameByIdService,
 } from "../services/gameService"
 import { isDynamicServerError } from "next/dist/client/components/hooks-server-context"
+import { getAuthenticatedUser } from "./user.actions"
 
 export async function createGameAction({ title }: CreateGameFormData) {
     try {
-        const { userId } = await auth()
-
-        if (!userId) {
-            throw new Error("Unable to retrieve user from clerk")
-        }
-        const { user } = await getUserByClerkId(userId)
-        if (!user) {
-            throw new Error("Unable to retrieve user from database")
-        }
+        const user = await getAuthenticatedUser()
 
         const game = await createGameService(title, user.id)
         return {
@@ -41,15 +32,7 @@ export async function createGameAction({ title }: CreateGameFormData) {
 
 export async function getAllGamesByUserAction() {
     try {
-        const { userId } = await auth()
-
-        if (!userId) {
-            throw new Error("Unable to retrieve user from clerk")
-        }
-        const { user } = await getUserByClerkId(userId)
-        if (!user) {
-            throw new Error("Unable to retrieve user from database")
-        }
+        const user = await getAuthenticatedUser()
 
         const games = await getAllGamesByUserService(user.id)
         return {
@@ -73,15 +56,7 @@ export async function getAllGamesByUserAction() {
 
 export async function getUserGameByIdAction(gameId: string) {
     try {
-        const { userId } = await auth()
-
-        if (!userId) {
-            throw new Error("Unable to retrieve user from clerk")
-        }
-        const { user } = await getUserByClerkId(userId)
-        if (!user) {
-            throw new Error("Unable to retrieve user from database")
-        }
+        const user = await getAuthenticatedUser()
 
         const userGame = await getUserGameByIdService(gameId, user.id)
 
