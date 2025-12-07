@@ -72,3 +72,13 @@ export async function createGameInviteService(
 
     return gameInvite
 }
+
+export async function getActiveGameWeekWithFixturesService(now: Date) {
+    const gameWeek = await prisma.gameweek.findFirst({
+        where: { deadline: { gt: now } },
+        orderBy: { deadline: "asc" },
+        include: { fixtures: { include: { homeTeam: true, awayTeam: true } } },
+    })
+
+    return gameWeek
+}

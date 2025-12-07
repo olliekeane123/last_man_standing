@@ -4,6 +4,7 @@ import { CreateGameFormData } from "../types/game"
 import {
     createGameInviteService,
     createGameService,
+    getActiveGameWeekWithFixturesService,
     getAllGamesByUserService,
     getGameByIdService,
     getUserGameByIdService,
@@ -125,6 +126,26 @@ export async function createGameInviteAction(gameId: string) {
                 error instanceof Error
                     ? error.message
                     : "Failed to create Game Invite",
+        }
+    }
+}
+
+export async function getActiveGameWeekWithFixturesAction() {
+    try {
+        const now = new Date()
+        const gameWeek = await getActiveGameWeekWithFixturesService(now)
+
+        return {
+            success: true,
+            gameWeek,
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error:
+                error instanceof Error
+                    ? error.message
+                    : "Failed to fetch active Gameweek",
         }
     }
 }
