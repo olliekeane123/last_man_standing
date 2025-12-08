@@ -1,6 +1,11 @@
 "use server"
 
-import { CreateGameFormData } from "../types/game"
+import {
+    CreateGameFormData,
+    GameActionResponse,
+    GameInviteActionResponse,
+    UserGameActionResponse,
+} from "../types/game"
 import {
     createGameService,
     getActiveGameWeekWithFixturesService,
@@ -11,15 +16,18 @@ import {
 } from "../services/gameService"
 import { isDynamicServerError } from "next/dist/client/components/hooks-server-context"
 import { getAuthenticatedUser } from "./user.actions"
+import { ActionResponse } from "../types/action"
 
-export async function createGameAction({ title }: CreateGameFormData) {
+export async function createGameAction({
+    title,
+}: CreateGameFormData): Promise<ActionResponse<GameActionResponse>> {
     try {
         const user = await getAuthenticatedUser()
 
         const game = await createGameService(title, user.id)
         return {
             success: true,
-            game,
+            data: game,
         }
     } catch (error) {
         console.error("Failed to create game:", error)
@@ -33,14 +41,16 @@ export async function createGameAction({ title }: CreateGameFormData) {
     }
 }
 
-export async function getAllGamesByUserAction() {
+export async function getAllGamesByUserAction(): Promise<
+    ActionResponse<GameActionResponse[]>
+> {
     try {
         const user = await getAuthenticatedUser()
 
         const games = await getAllGamesByUserService(user.id)
         return {
             success: true,
-            games,
+            data: games,
         }
     } catch (error) {
         if (isDynamicServerError(error)) {
@@ -57,15 +67,19 @@ export async function getAllGamesByUserAction() {
     }
 }
 
-export async function getUserGameByIdAction(gameId: string) {
+export async function getUserGameByIdAction(
+    gameId: string
+): Promise<ActionResponse<UserGameActionResponse>> {
     try {
         const user = await getAuthenticatedUser()
 
         const userGame = await getUserGameByIdService(gameId, user.id)
 
+        if (!userGame) throw new Error("User Game not found")
+
         return {
             success: true,
-            userGame,
+            data: userGame,
         }
     } catch (error) {
         console.error("Failed to fetch User Game by ID:", error)
@@ -79,13 +93,17 @@ export async function getUserGameByIdAction(gameId: string) {
     }
 }
 
-export async function getGameByIdAction(gameId: string) {
+export async function getGameByIdAction(
+    gameId: string
+): Promise<ActionResponse<GameActionResponse>> {
     try {
         const game = await getGameByIdService(gameId)
 
+        if (!game) throw new Error("Game not found")
+
         return {
             success: true,
-            game,
+            data: game,
         }
     } catch (error) {
         console.error("Failed to fetch Game by ID:", error)
@@ -99,7 +117,9 @@ export async function getGameByIdAction(gameId: string) {
     }
 }
 
-export async function getOrCreateValidGameInviteAction(gameId: string) {
+export async function getOrCreateValidGameInviteAction(
+    gameId: string
+): Promise<ActionResponse<GameInviteActionResponse>> {
     try {
         const user = await getAuthenticatedUser()
 
@@ -109,7 +129,7 @@ export async function getOrCreateValidGameInviteAction(gameId: string) {
         )
         return {
             success: true,
-            gameInvite,
+            data: gameInvite,
         }
     } catch (error) {
         return {
@@ -127,9 +147,11 @@ export async function getActiveGameWeekWithFixturesAction() {
         const now = new Date()
         const gameWeek = await getActiveGameWeekWithFixturesService(now)
 
+        if (!gameWeek) throw new Error("Unable to find Game Week")
+
         return {
             success: true,
-            gameWeek,
+            data: gameWeek,
         }
     } catch (error) {
         return {

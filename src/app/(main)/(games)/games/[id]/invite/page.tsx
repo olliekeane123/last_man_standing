@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { getOrCreateValidGameInviteAction } from "@/lib/actions/game.actions"
+import isSuccessfulAction from "@/lib/actions/utils/isSuccessfulAction"
 
 type InvitePageProps = {
     params: Promise<{ id: string }>
@@ -17,11 +18,15 @@ export default async function InvitePage(props: InvitePageProps) {
     const params = await props.params
     const { id } = params
 
-    const gameInvite = await getOrCreateValidGameInviteAction(id)
+    const gameInviteResponse = await getOrCreateValidGameInviteAction(id)
 
-    function handleCopy() {
-        navigator.clipboard.writeText(gameInvite.gameInvite?.token as string)
-    }
+    if (!isSuccessfulAction(gameInviteResponse)) throw new Error("")
+
+    const gameInvite = gameInviteResponse.data
+
+    // function handleCopy() {
+    //     navigator.clipboard.writeText(gameInvite.token)
+    // }
 
     return (
         <div className="justify-center flex">
@@ -44,12 +49,12 @@ export default async function InvitePage(props: InvitePageProps) {
 
                         <div className="flex space-x-2 p-5">
                             <Input
-                                value={gameInvite.gameInvite?.token}
+                                value={gameInvite.token}
                                 readOnly
                                 type="text"
                                 className="border-primary"
                             />
-                            <Button onClick={handleCopy}>Copy Link</Button>
+                            <Button>Copy Link</Button>
                         </div>
                     </Card>
                 </CardContent>

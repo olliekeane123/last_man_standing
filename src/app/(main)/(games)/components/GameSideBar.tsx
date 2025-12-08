@@ -12,6 +12,7 @@ import {
     SidebarRail,
 } from "@/components/ui/sidebar"
 import { getGameByIdAction } from "@/lib/actions/game.actions"
+import isSuccessfulAction from "@/lib/actions/utils/isSuccessfulAction"
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu"
 import { Home, Crown, SquarePlus, UserPlus, Scale } from "lucide-react"
 import Link from "next/link"
@@ -40,7 +41,7 @@ const sidebarItems = [
         suffix: "/rules",
         icon: Scale,
     },
-     {
+    {
         title: "Invite",
         suffix: "/invite",
         icon: UserPlus,
@@ -55,14 +56,16 @@ export async function GameSideBar({ gameId }: GameSideBarProps) {
 
     const gameResponse = await getGameByIdAction(gameId)
 
+    if (!isSuccessfulAction(gameResponse)) throw new Error("")
+
+    const game = gameResponse.data
+
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>Last Man Standing</SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>
-                        {gameResponse.success && gameResponse.game?.title}
-                    </SidebarGroupLabel>
+                    <SidebarGroupLabel>{game.title}</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {items.map((item) => (

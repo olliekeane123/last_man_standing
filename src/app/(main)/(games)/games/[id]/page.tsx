@@ -3,8 +3,7 @@ import {
     getActiveGameWeekWithFixturesAction,
     getUserGameByIdAction,
 } from "@/lib/actions/game.actions"
-
-
+import isSuccessfulAction from "@/lib/actions/utils/isSuccessfulAction"
 
 type GamePageProps = {
     params: Promise<{ id: string }>
@@ -13,17 +12,17 @@ type GamePageProps = {
 export default async function GamePage(props: GamePageProps) {
     const params = await props.params
     const { id } = params
-    const game = await getUserGameByIdAction(id)
+    const gameResponse = await getUserGameByIdAction(id)
     const gameWeek = await getActiveGameWeekWithFixturesAction()
 
-    if (!game.success) {
+    if (!isSuccessfulAction(gameResponse) || !gameWeek) {
         return <div>Error.</div>
     }
 
     return (
         <div>
-            <p>You&apos;re on the game page: {game.userGame?.game.title}</p>
-            {gameWeek.gameWeek?.fixtures.map((fixture) => (
+            <p>You&apos;re on the game page: {gameResponse.data.game.title}</p>
+            {gameWeek.data?.fixtures.map((fixture) => (
                 <TeamFixtureCard
                     homeTeam={fixture.homeTeam}
                     awayTeam={fixture.awayTeam}
