@@ -2,17 +2,15 @@
 
 import { CreateGameFormData } from "../types/game"
 import {
-    createGameInviteService,
     createGameService,
     getActiveGameWeekWithFixturesService,
     getAllGamesByUserService,
     getGameByIdService,
     getUserGameByIdService,
+    getOrCreateValidGameInviteService,
 } from "../services/gameService"
 import { isDynamicServerError } from "next/dist/client/components/hooks-server-context"
 import { getAuthenticatedUser } from "./user.actions"
-import { generateInviteToken } from "../utils/generateInviteToken"
-import generateTokenExpiryDate from "../utils/generateTokenExpiryDate"
 
 export async function createGameAction({ title }: CreateGameFormData) {
     try {
@@ -101,19 +99,13 @@ export async function getGameByIdAction(gameId: string) {
     }
 }
 
-export async function createGameInviteAction(gameId: string) {
+export async function getOrCreateValidGameInviteAction(gameId: string) {
     try {
         const user = await getAuthenticatedUser()
 
-        const token = generateInviteToken()
-
-        const expiryDate = generateTokenExpiryDate()
-
-        const gameInvite = await createGameInviteService(
+        const gameInvite = await getOrCreateValidGameInviteService(
             gameId,
-            user.id,
-            token,
-            expiryDate
+            user.id
         )
         return {
             success: true,
@@ -125,7 +117,7 @@ export async function createGameInviteAction(gameId: string) {
             error:
                 error instanceof Error
                     ? error.message
-                    : "Failed to create Game Invite",
+                    : "Failed to fetch/create Game Invite",
         }
     }
 }

@@ -1,4 +1,6 @@
 import prisma from "@/lib/prisma"
+import { generateInviteToken } from "../utils/generateInviteToken"
+import generateTokenExpiryDate from "../utils/generateTokenExpiryDate"
 
 export async function createGameService(title: string, adminId: string) {
     const newGameAndUserGame = await prisma.$transaction(async (tx) => {
@@ -60,17 +62,42 @@ export async function getGameByIdService(gameId: string) {
     return game
 }
 
-export async function createGameInviteService(
+export async function getOrCreateValidGameInviteService(
     gameId: string,
     userId: string,
-    token: string,
-    expiresAt: Date
 ) {
-    const gameInvite = await prisma.gameInvite.create({
-        data: { token, userId, gameId, expiresAt },
-    })
+    const existingInvite = await prisma.gameInvite.findUnique({
+        where: { userId_gameId: { userId, gameId } },
+    });
 
-    return gameInvite
+    const now = new Date();
+
+    if (existingInvite) {
+
+        if (existingInvite.expiresAt < now) {
+            
+            await prisma.gameInvite.delete({
+                where: { id: existingInvite.id },
+            });
+
+        } else {
+            return existingInvite;
+        }
+    }
+    
+    const newToken = generateInviteToken();
+    const newExpiresAt = generateTokenExpiryDate(); 
+
+    const newGameInvite = await prisma.gameInvite.create({
+        data: { 
+            userId, 
+            gameId, 
+            token: newToken, 
+            expiresAt: newExpiresAt 
+        },
+    });
+
+    return newGameInvite;
 }
 
 export async function getActiveGameWeekWithFixturesService(now: Date) {

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/sidebar"
 import { getGameByIdAction } from "@/lib/actions/game.actions"
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu"
-import { Home, CrownIcon, Crown, SquarePlus } from "lucide-react"
+import { Home, Crown, SquarePlus, UserPlus, Scale } from "lucide-react"
 import Link from "next/link"
 
 type GameSideBarProps = {
@@ -38,7 +38,12 @@ const sidebarItems = [
     {
         title: "Rules",
         suffix: "/rules",
-        icon: CrownIcon,
+        icon: Scale,
+    },
+     {
+        title: "Invite",
+        suffix: "/invite",
+        icon: UserPlus,
     },
 ]
 

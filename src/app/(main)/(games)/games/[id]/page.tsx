@@ -4,10 +4,10 @@ import {
     getUserGameByIdAction,
 } from "@/lib/actions/game.actions"
 
-type Params = Promise<{ id: string }>
+
 
 type GamePageProps = {
-    params: Params
+    params: Promise<{ id: string }>
 }
 
 export default async function GamePage(props: GamePageProps) {
