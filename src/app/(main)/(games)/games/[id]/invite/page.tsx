@@ -9,6 +9,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { getOrCreateValidGameInviteAction } from "@/lib/actions/game.actions"
 import isSuccessfulAction from "@/lib/actions/utils/isSuccessfulAction"
+import { getBaseUrl } from "@/lib/utils/getBaseUrl"
 
 type InvitePageProps = {
     params: Promise<{ id: string }>
@@ -23,6 +24,10 @@ export default async function InvitePage(props: InvitePageProps) {
     if (!isSuccessfulAction(gameInviteResponse)) throw new Error("")
 
     const gameInvite = gameInviteResponse.data
+
+    const baseUrl = await getBaseUrl()
+
+    const inviteLink = new URL(`/join-game/${gameInvite.token}`, baseUrl)
 
     // function handleCopy() {
     //     navigator.clipboard.writeText(gameInvite.token)
@@ -49,7 +54,7 @@ export default async function InvitePage(props: InvitePageProps) {
 
                         <div className="flex space-x-2 p-5">
                             <Input
-                                value={gameInvite.token}
+                                value={inviteLink.href}
                                 readOnly
                                 type="text"
                                 className="border-primary"

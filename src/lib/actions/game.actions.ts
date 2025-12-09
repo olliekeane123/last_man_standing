@@ -13,10 +13,13 @@ import {
     getGameByIdService,
     getUserGameByIdService,
     getOrCreateValidGameInviteService,
+    getGameInviteByTokenService,
+    enrollUserInGameService,
 } from "../services/gameService"
 import { isDynamicServerError } from "next/dist/client/components/hooks-server-context"
 import { getAuthenticatedUser } from "./user.actions"
 import { ActionResponse } from "../types/action"
+import { Prisma } from "@prisma/client"
 
 export async function createGameAction({
     title,
@@ -139,6 +142,34 @@ export async function getOrCreateValidGameInviteAction(
                     ? error.message
                     : "Failed to fetch/create Game Invite",
         }
+    }
+}
+
+export async function verifyGameInviteTokenAction(
+    token: string
+): Promise<GameInviteActionResponse> {
+    try {
+        const gameInvite = await getGameInviteByTokenService(token)
+        if (!gameInvite) throw new Error("Unable to find token in database")
+
+        return gameInvite
+    } catch (error) {
+        throw error
+    }
+}
+
+export async function enrollUserInGameAction(userId: string, gameId: string) {
+    try {
+        const userGame = await enrollUserInGameService(userId, gameId)
+        if (userGame === null) {
+            throw new Error(
+                "Invalid Game ID or User ID provided for enrollment."
+            )
+        }
+        return userGame
+    } catch (error) {
+        console.error("Enrollment failed due to unexpected error:", error)
+        throw new Error("Failed to enroll user in game due to a server error.")
     }
 }
 

@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma"
 import { generateInviteToken } from "../utils/generateInviteToken"
 import generateTokenExpiryDate from "../utils/generateTokenExpiryDate"
+import { Prisma } from "@prisma/client"
 
 export async function createGameService(title: string, adminId: string) {
     const newGameAndUserGame = await prisma.$transaction(async (tx) => {
@@ -64,40 +65,67 @@ export async function getGameByIdService(gameId: string) {
 
 export async function getOrCreateValidGameInviteService(
     gameId: string,
-    userId: string,
+    userId: string
 ) {
     const existingInvite = await prisma.gameInvite.findUnique({
         where: { userId_gameId: { userId, gameId } },
-    });
+    })
 
-    const now = new Date();
+    const now = new Date()
 
     if (existingInvite) {
-
         if (existingInvite.expiresAt < now) {
-            
             await prisma.gameInvite.delete({
                 where: { id: existingInvite.id },
-            });
-
+            })
         } else {
-            return existingInvite;
+            return existingInvite
         }
     }
-    
-    const newToken = generateInviteToken();
-    const newExpiresAt = generateTokenExpiryDate(); 
+
+    const newToken = generateInviteToken()
+    const newExpiresAt = generateTokenExpiryDate()
 
     const newGameInvite = await prisma.gameInvite.create({
-        data: { 
-            userId, 
-            gameId, 
-            token: newToken, 
-            expiresAt: newExpiresAt 
+        data: {
+            userId,
+            gameId,
+            token: newToken,
+            expiresAt: newExpiresAt,
         },
-    });
+    })
 
-    return newGameInvite;
+    return newGameInvite
+}
+
+export async function enrollUserInGameService(userId: string, gameId: string) {
+    try {
+        const userGame = await prisma.userGame.upsert({
+            where: { userId_gameId: { userId, gameId } },
+            update: {},
+            create: { userId, gameId },
+        })
+
+        return userGame
+    } catch (error) {
+        if (
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === "P2003"
+        ) {
+            // This happens if the userId or gameId doesn't exist.
+            // Since the userId should be valid (from auth), we assume it's the gameId.
+            console.error(
+                `Foreign Key Violation: Game or User ID is invalid. Game ID: ${gameId}`
+            )
+            return null
+        }
+        throw error
+    }
+}
+
+export async function getGameInviteByTokenService(token: string) {
+    const gameInvite = await prisma.gameInvite.findUnique({ where: { token } })
+    return gameInvite
 }
 
 export async function getActiveGameWeekWithFixturesService(now: Date) {
