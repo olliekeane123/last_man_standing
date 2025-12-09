@@ -19,7 +19,6 @@ import {
 import { isDynamicServerError } from "next/dist/client/components/hooks-server-context"
 import { getAuthenticatedUser } from "./user.actions"
 import { ActionResponse } from "../types/action"
-import { Prisma } from "@prisma/client"
 
 export async function createGameAction({
     title,
