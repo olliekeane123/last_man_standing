@@ -146,10 +146,10 @@ export async function getOrCreateValidGameInviteAction(
 
 export async function verifyGameInviteTokenAction(
     token: string
-): Promise<GameInviteActionResponse> {
+): Promise<GameInviteActionResponse | null> {
     try {
         const gameInvite = await getGameInviteByTokenService(token)
-        if (!gameInvite) throw new Error("Unable to find token in database")
+        if (!gameInvite) return null
 
         return gameInvite
     } catch (error) {

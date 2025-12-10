@@ -27,7 +27,7 @@ export default async function InvitePage(props: InvitePageProps) {
 
     const baseUrl = await getBaseUrl()
 
-    const inviteLink = new URL(`/join-game/${gameInvite.token}`, baseUrl)
+    const inviteLink = new URL(`/invite/${gameInvite.token}`, baseUrl)
 
     // function handleCopy() {
     //     navigator.clipboard.writeText(gameInvite.token)
