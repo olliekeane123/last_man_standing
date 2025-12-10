@@ -18,8 +18,8 @@ export default function Hero() {
                     <p className="mt-6 max-w-[60ch] xs:text-lg">
                         Create leagues, join friends, and make weekly
                         predictions. Pick a winning team each round—survive, and
-                        advance. Get it wrong… and you're out. Be the last one
-                        standing.
+                        advance. Get it wrong… and you&apos;re out. Be the last
+                        one standing.
                     </p>
                     <div className="mt-12 flex flex-col sm:flex-row items-center gap-4">
                         <Button
