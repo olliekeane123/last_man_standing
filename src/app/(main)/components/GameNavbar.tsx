@@ -1,15 +1,10 @@
 import Link from "next/link"
-import {
-    SignedIn,
-    SignedOut,
-    SignInButton,
-    SignUpButton,
-} from "@clerk/nextjs"
-import { ModeToggle } from "./ModeToggle"
+import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs"
+import ModeToggle from "../../../components/ModeToggle"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { ThemedUserButton } from "@/components/clerk/ThemedUserButton"
 
-export function Navbar() {
+export function GameNavBar() {
     return (
         <nav className="p-4 flex items-center justify-between">
             {/* LEFT */}

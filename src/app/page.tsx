@@ -1,3 +1,13 @@
+import { AppNavbar } from "@/components/app-navbar"
+import { ThemedUserButton } from "@/components/clerk/ThemedUserButton"
+import Hero from "@/components/Hero"
+
 export default function Home() {
-    return <div>Home Page</div>
+    return (
+        <>
+            <AppNavbar />
+            <Hero />
+            {/* <ThemedUserButton></ThemedUserButton> */}
+        </>
+    )
 }
