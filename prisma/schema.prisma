@@ -146,11 +146,12 @@ model Team {
 }
 
 model Fixture {
-    id       String   @id @default(cuid())
-    apiId    Int      @unique
-    utcDate  DateTime
-    status   String
-    matchday Int
+    id             String   @id @default(cuid())
+    apiId          Int      @unique
+    utcDate        DateTime
+    status         String
+    matchday       Int
+    bbc_fixture_id String? @unique
 
     Competition   Competition? @relation(fields: [competitionId], references: [id])
     competitionId String?
